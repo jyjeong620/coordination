@@ -5,8 +5,8 @@ import lombok.Getter;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
-@Entity
 @SQLRestriction("is_enable = true")
+@Entity
 public class Brand {
 
     @Id

@@ -1,12 +1,12 @@
-INSERT INTO category (name)
-VALUES ('상의'),
-       ('아우터'),
-       ('바지'),
-       ('스니커즈'),
-       ('가방'),
-       ('모자'),
-       ('양말'),
-       ('액세서리');
+INSERT INTO category (name, is_enable)
+VALUES ('상의', true),
+       ('아우터', true),
+       ('바지', true),
+       ('스니커즈', true),
+       ('가방', true),
+       ('모자', true),
+       ('양말', true),
+       ('액세서리', true);
 
 INSERT INTO brand (name, is_enable)
 VALUES ('A', true),
