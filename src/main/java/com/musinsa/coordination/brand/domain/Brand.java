@@ -1,7 +1,6 @@
 package com.musinsa.coordination.brand.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -12,7 +11,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     private boolean isEnable;
@@ -20,7 +19,7 @@ public class Brand {
     protected Brand() {
     }
 
-    private Brand( String name, boolean isEnable) {
+    private Brand(String name, boolean isEnable) {
         this.name = name;
         this.isEnable = isEnable;
     }
