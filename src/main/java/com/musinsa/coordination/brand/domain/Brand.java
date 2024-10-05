@@ -2,9 +2,11 @@ package com.musinsa.coordination.brand.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
+@SQLRestriction("is_enable = true")
 public class Brand {
 
     @Id

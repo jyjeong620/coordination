@@ -16,8 +16,8 @@ public class BrandService {
 
     private final BrandRepository brandRepository;
 
-    public List<Brand> findActiveAll() {
-        return brandRepository.findActiveAll();
+    public List<Brand> findAll() {
+        return brandRepository.findAll();
     }
 
     @Transactional
@@ -32,7 +32,7 @@ public class BrandService {
     public Brand update(Long brandId, String updatedName) {
         validateBrandName(updatedName);
 
-        Brand brand = findActiveBrandById(brandId);
+        Brand brand = findById(brandId);
         brand.updateName(updatedName);
 
         return brand;
@@ -40,14 +40,14 @@ public class BrandService {
 
     @Transactional
     public Brand delete(Long brandId) {
-        Brand brand = findActiveBrandById(brandId);
+        Brand brand = findById(brandId);
 
         brand.disable();
         return brand;
     }
 
-    private Brand findActiveBrandById(Long brandId) {
-        return brandRepository.findActiveById(brandId)
+    private Brand findById(Long brandId) {
+        return brandRepository.findById(brandId)
                 .orElseThrow(() -> new NotFoundBrandException(brandId));
     }
 
