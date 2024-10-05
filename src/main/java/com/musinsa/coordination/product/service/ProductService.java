@@ -51,7 +51,15 @@ public class ProductService {
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new InvalidRequestValueException("잘못된 브랜드 Id 입니다. brandId : " + brandId));
 
-        product.update(category, brand, price);
+        product.update(category.getId(), brand.getId(), price);
         return product;
+    }
+
+    @Transactional
+    public void delete(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundProductException(productId));
+
+        product.disable();
     }
 }
