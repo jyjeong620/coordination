@@ -4,6 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
+    // 400
+    INVALID_REQUEST_VALUE(400001, "요청값이 올바르지 않습니다."),
+
     // 404
     NOT_FOUND(404001, "요청한 데이터를 찾을 수 없습니다"),
 

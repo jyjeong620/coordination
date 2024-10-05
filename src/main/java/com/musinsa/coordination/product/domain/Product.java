@@ -1,5 +1,8 @@
 package com.musinsa.coordination.product.domain;
 
+import com.musinsa.coordination.brand.domain.Brand;
+import com.musinsa.coordination.category.domain.Category;
+import com.musinsa.coordination.common.exception.InvalidRequestValueException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,8 +40,15 @@ public class Product {
     }
 
     private void validate(BigDecimal price) {
-        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("가격은 0원 이상이어야 합니다."); // TODO 에러 처리 추가
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 1) {
+            throw new InvalidRequestValueException("가격정보가 1원 미만입니다");
         }
+    }
+
+    public void update(Category category, Brand brand, BigDecimal price) {
+        validate(price);
+        this.categoryId = category.getId();
+        this.brandId = brand.getId();
+        this.price = price;
     }
 }
