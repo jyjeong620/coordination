@@ -1,10 +1,10 @@
 package com.musinsa.coordination.brand.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class Brand {
 
@@ -12,6 +12,28 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
+    private boolean isEnable;
+
+    protected Brand() {
+    }
+
+    private Brand( String name, boolean isEnable) {
+        this.name = name;
+        this.isEnable = isEnable;
+    }
+
+    public static Brand create(String name) {
+        return new Brand(name, true);
+    }
+
+    public void updateName(String updatedName) {
+        this.name = updatedName;
+    }
+
+    public void disable() {
+        this.isEnable = false;
+    }
 }
