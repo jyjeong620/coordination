@@ -61,4 +61,12 @@ public class Product {
     public void disable() {
         this.isEnable = false;
     }
+
+    public String getCategoryName() {
+        return category.getName();
+    }
+
+    public String getBrandName() {
+        return brand.getName();
+    }
 }

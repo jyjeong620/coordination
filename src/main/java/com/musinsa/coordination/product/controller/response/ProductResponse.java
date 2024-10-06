@@ -4,9 +4,9 @@ import com.musinsa.coordination.product.domain.Product;
 
 import java.math.BigDecimal;
 
-public record ProductResponse(Long id, Long categoryId, Long brandId, BigDecimal price) {
+public record ProductResponse(String category, String brand, BigDecimal price) {
 
     public static ProductResponse from(Product product) {
-        return new ProductResponse(product.getId(), product.getCategory().getId(), product.getBrand().getId(), product.getPrice());
+        return new ProductResponse(product.getCategoryName(), product.getBrandName(), product.getPrice());
     }
 }
