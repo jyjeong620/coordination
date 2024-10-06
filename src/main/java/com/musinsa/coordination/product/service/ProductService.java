@@ -26,40 +26,43 @@ public class ProductService {
 
     @Transactional
     public Product save(Long categoryId, Long brandId, BigDecimal price) {
-        validateCategoryAndBrand(categoryId, brandId);
+        Category category = getCategory(categoryId);
+        Brand brand = getBrand(brandId);
 
-        Product product = Product.create(categoryId, brandId, price);
+        Product product = Product.create(category, brand, price);
         return productRepository.save(product);
-    }
-
-    private void validateCategoryAndBrand(Long categoryId, Long brandId) {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw new NotFoundCategoryException(categoryId);
-        }
-        if (!brandRepository.existsById(brandId)) {
-            throw new NotFoundBrandException(brandId);
-        }
-
     }
 
     @Transactional
     public Product update(Long productId, Long categoryId, Long brandId, BigDecimal price) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundProductException(productId));
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new InvalidRequestValueException("잘못된 카테고리 Id 입니다. categoryId : " + categoryId));
-        Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new InvalidRequestValueException("잘못된 브랜드 Id 입니다. brandId : " + brandId));
+        Product product = getProduct(productId);
+        Category category = getCategory(categoryId);
+        Brand brand = getBrand(brandId);
 
-        product.update(category.getId(), brand.getId(), price);
+        product.update(category, brand, price);
         return product;
     }
 
     @Transactional
     public void delete(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundProductException(productId));
+        Product product = getProduct(productId);
 
         product.disable();
     }
+
+    private Product getProduct(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundProductException(productId));
+    }
+
+    private Brand getBrand(Long brandId) {
+        return brandRepository.findById(brandId)
+                .orElseThrow(() -> new InvalidRequestValueException("잘못된 브랜드 Id 입니다. brandId : " + brandId));
+    }
+
+    private Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new InvalidRequestValueException("잘못된 카테고리 Id 입니다. categoryId : " + categoryId));
+    }
+
 }

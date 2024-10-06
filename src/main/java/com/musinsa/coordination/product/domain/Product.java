@@ -3,10 +3,7 @@ package com.musinsa.coordination.product.domain;
 import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.common.exception.InvalidRequestValueException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -21,9 +18,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    private Long brandId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
     private BigDecimal price;
 
@@ -32,16 +33,16 @@ public class Product {
     protected Product() {
     }
 
-    private Product(Long categoryId, Long brandId, BigDecimal price, boolean isEnable) {
+    private Product(Category category, Brand brand, BigDecimal price, boolean isEnable) {
         validate(price);
-        this.categoryId = categoryId;
-        this.brandId = brandId;
+        this.category = category;
+        this.brand = brand;
         this.price = price;
         this.isEnable = isEnable;
     }
 
-    public static Product create(Long categoryId, Long brandId, BigDecimal price) {
-        return new Product(categoryId, brandId, price, true);
+    public static Product create(Category category, Brand brand, BigDecimal price) {
+        return new Product(category, brand, price, true);
     }
 
     private void validate(BigDecimal price) {
@@ -50,10 +51,10 @@ public class Product {
         }
     }
 
-    public void update(Long categoryId, Long brandId, BigDecimal price) {
+    public void update(Category category, Brand brand, BigDecimal price) {
         validate(price);
-        this.categoryId = categoryId;
-        this.brandId = brandId;
+        this.category = category;
+        this.brand = brand;
         this.price = price;
     }
 

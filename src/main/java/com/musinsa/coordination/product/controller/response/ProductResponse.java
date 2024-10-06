@@ -7,6 +7,6 @@ import java.math.BigDecimal;
 public record ProductResponse(Long id, Long categoryId, Long brandId, BigDecimal price) {
 
     public static ProductResponse from(Product product) {
-        return new ProductResponse(product.getId(), product.getCategoryId(), product.getBrandId(), product.getPrice());
+        return new ProductResponse(product.getId(), product.getCategory().getId(), product.getBrand().getId(), product.getPrice());
     }
 }

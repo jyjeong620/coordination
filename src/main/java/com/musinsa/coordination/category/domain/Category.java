@@ -22,4 +22,14 @@ public class Category {
 
     protected Category() {
     }
+
+    private Category(String name, boolean isEnable) {
+        this.name = name;
+        this.isEnable = isEnable;
+    }
+
+    public static Category create(String name) {
+        return new Category(name, true);
+    }
 }
+
