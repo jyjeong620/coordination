@@ -4,6 +4,7 @@ import com.musinsa.coordination.product.domain.LowestPriceProducts;
 import com.musinsa.coordination.product.domain.Product;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 public record LowestPriceProductsResponse(BigDecimal totalPrice, List<ProductResponse> products) {
@@ -11,6 +12,7 @@ public record LowestPriceProductsResponse(BigDecimal totalPrice, List<ProductRes
     public static LowestPriceProductsResponse from(LowestPriceProducts products) {
         List<ProductResponse> productResponses = products.getProducts()
                 .stream()
+                .sorted(Comparator.comparing(Product::getCategoryId))
                 .map(ProductResponse::from)
                 .toList();
 
