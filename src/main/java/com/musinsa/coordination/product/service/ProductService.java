@@ -6,6 +6,7 @@ import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.category.repository.CategoryRepository;
 import com.musinsa.coordination.common.exception.InvalidRequestValueException;
 import com.musinsa.coordination.product.domain.LowestPriceProducts;
+import com.musinsa.coordination.product.domain.LowestPriceProductsFactory;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.exception.NotFoundProductException;
 import com.musinsa.coordination.product.repository.ProductRepository;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -71,27 +69,6 @@ public class ProductService {
     public LowestPriceProducts getLowestPriceProductsByCategory() {
         List<Product> products = productRepository.findAll();
 
-        Map<Category, List<Product>> groupByCategory = groupProductsByCategory(products);
-
-        return findLowestPriceProducts(groupByCategory);
-    }
-
-    private Map<Category, List<Product>> groupProductsByCategory(List<Product> products) {
-        return products.stream()
-                .collect(Collectors.groupingBy(Product::getCategory));
-    }
-
-    private LowestPriceProducts findLowestPriceProducts(Map<Category, List<Product>> groupByCategory) {
-        List<Product> products = groupByCategory.values()
-                .stream()
-                .map(this::getLowestPriceProduct)
-                .toList();
-        return LowestPriceProducts.from(products);
-    }
-
-    private Product getLowestPriceProduct(List<Product> products) {
-        return products.stream()
-                .min(Comparator.comparing(Product::getPrice))
-                .orElseThrow(() -> new IllegalArgumentException("가격이 가장 낮은 상품이 존재하지 않습니다."));
+        return LowestPriceProductsFactory.create(products);
     }
 }
