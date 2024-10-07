@@ -38,7 +38,7 @@ public class LowestPriceProductsFactory {
 
     private static Product getLowestPriceProduct(List<Product> products) {
         return products.stream()
-                .min(Comparator.comparing(Product::getPrice).thenComparing(Product::getId))
+                .min(Comparator.comparing(Product::getPrice).thenComparing(Product::getId, Comparator.reverseOrder()))
                 .orElseThrow(() -> new IllegalArgumentException("최저가 상품을 찾을 수 없습니다"));
     }
 

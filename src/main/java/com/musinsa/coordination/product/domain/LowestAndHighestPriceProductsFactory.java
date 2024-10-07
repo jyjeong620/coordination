@@ -18,13 +18,13 @@ public class LowestAndHighestPriceProductsFactory {
 
     private static Product getHighestPriceProduct(List<Product> products) {
         return products.stream()
-                .max(Comparator.comparing(Product::getPrice))
+                .max(Comparator.comparing(Product::getPrice).thenComparing(Product::getId, Comparator.reverseOrder()))
                 .orElseThrow(() -> new IllegalArgumentException("products is empty")); //TODO 에러처리 필요
     }
 
     private static Product getLowestPriceProduct(List<Product> products) {
         return products.stream()
-                .min(Comparator.comparing(Product::getPrice).thenComparing(Product::getId))
+                .min(Comparator.comparing(Product::getPrice).thenComparing(Product::getId, Comparator.reverseOrder()))
                 .orElseThrow(() -> new IllegalArgumentException("products is empty"));
     }
 }
