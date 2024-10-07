@@ -8,9 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class ProductTest {
 
@@ -26,12 +25,12 @@ class ProductTest {
         Product product = Product.create(category, brand, price);
 
         // then
-        assertAll(
-                () -> assertThat(product).isNotNull(),
-                () -> assertThat(product.getCategory()).isEqualTo(category),
-                () -> assertThat(product.getBrand()).isEqualTo(brand),
-                () -> assertThat(product.getPrice()).isEqualTo(price)
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(product).isNotNull();
+            softly.assertThat(product.getCategory()).isEqualTo(category);
+            softly.assertThat(product.getBrand()).isEqualTo(brand);
+            softly.assertThat(product.getPrice()).isEqualTo(price);
+        });
     }
 
     @DisplayName("가격이 1원 미만일 경우 예외를 발생시킨다.")
@@ -65,11 +64,10 @@ class ProductTest {
         product.update(updatedCategory, updatedBrand, updatedPrice);
 
         // then
-        assertAll(
-                () -> assertThat(product.getCategory()).isEqualTo(updatedCategory),
-                () -> assertThat(product.getBrand()).isEqualTo(updatedBrand),
-                () -> assertThat(product.getPrice()).isEqualTo(updatedPrice)
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(product.getCategory()).isEqualTo(updatedCategory);
+            softly.assertThat(product.getBrand()).isEqualTo(updatedBrand);
+            softly.assertThat(product.getPrice()).isEqualTo(updatedPrice);
+        });
     }
-
 }

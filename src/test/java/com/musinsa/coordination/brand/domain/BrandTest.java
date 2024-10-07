@@ -50,5 +50,4 @@ class BrandTest {
         // then
         assertThat(brand.isEnable()).isFalse();
     }
-
 }

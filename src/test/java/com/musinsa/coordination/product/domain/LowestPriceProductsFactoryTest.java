@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class LowestPriceProductsFactoryTest {
 
@@ -30,8 +31,10 @@ class LowestPriceProductsFactoryTest {
         LowestPriceProducts lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct, middlePriceProduct, highestPriceProduct));
 
         // then
-        assertThat(lowestPriceProducts.getProducts()).contains(lowestPriceProduct);
-        assertThat(lowestPriceProducts.getProducts()).doesNotContain(middlePriceProduct, highestPriceProduct);
+        assertSoftly(softly -> {
+            softly.assertThat(lowestPriceProducts.getProducts()).contains(lowestPriceProduct);
+            softly.assertThat(lowestPriceProducts.getProducts()).doesNotContain(middlePriceProduct, highestPriceProduct);
+        });
     }
 
     @DisplayName("Product 리스트를 받아 카테고리별 가격이 가장 낮은 상품들을 생성한다.")
@@ -56,8 +59,10 @@ class LowestPriceProductsFactoryTest {
         LowestPriceProducts lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct1, middlePriceProduct1, highestPriceProduct1, lowestPriceProduct2, middlePriceProduct2, highestPriceProduct2));
 
         // then
-        assertThat(lowestPriceProducts.getProducts()).contains(lowestPriceProduct1, lowestPriceProduct2);
-        assertThat(lowestPriceProducts.getProducts()).doesNotContain(middlePriceProduct1, highestPriceProduct1, middlePriceProduct2, highestPriceProduct2);
+        assertSoftly(softly -> {
+            softly.assertThat(lowestPriceProducts.getProducts()).contains(lowestPriceProduct1, lowestPriceProduct2);
+            softly.assertThat(lowestPriceProducts.getProducts()).doesNotContain(middlePriceProduct1, highestPriceProduct1, middlePriceProduct2, highestPriceProduct2);
+        });
     }
 
     @DisplayName("생성된 가장 낮은 가격 상품들의 총 가격을 계산한다.")
@@ -85,6 +90,7 @@ class LowestPriceProductsFactoryTest {
         LowestPriceProducts lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct1, middlePriceProduct1, highestPriceProduct1, lowestPriceProduct2, middlePriceProduct2, highestPriceProduct2));
 
         // then
-        assertThat(lowestPriceProducts.getTotalPrice()).isEqualTo(minPrice1.add(minPrice2));
+        BigDecimal expected = minPrice1.add(minPrice2);
+        assertThat(lowestPriceProducts.getTotalPrice()).isEqualTo(expected);
     }
 }

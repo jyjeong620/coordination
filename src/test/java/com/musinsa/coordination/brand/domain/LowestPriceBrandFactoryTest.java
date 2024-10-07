@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class LowestPriceBrandFactoryTest {
 
@@ -36,10 +36,10 @@ class LowestPriceBrandFactoryTest {
         LowestPriceBrand lowestPriceBrand = LowestPriceBrandFactory.create(List.of(product1, product2, product3, product4, product5, product6));
 
         // then
-        assertAll(
-                () -> assertThat(lowestPriceBrand.getBrand()).isEqualTo(lowestBrand),
-                () -> assertThat(lowestPriceBrand.getProducts()).contains(product1, product2, product3)
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(lowestPriceBrand.getBrand()).isEqualTo(lowestBrand);
+            softly.assertThat(lowestPriceBrand.getProducts()).contains(product1, product2, product3);
+        });
     }
 
     @DisplayName("가장 낮은 가격을 가진 브랜드의 총 가격을 반환한다.")
@@ -63,8 +63,7 @@ class LowestPriceBrandFactoryTest {
         LowestPriceBrand lowestPriceBrand = LowestPriceBrandFactory.create(List.of(product1, product2, product3));
 
         // then
-        assertThat(lowestPriceBrand.getTotalPrice()).isEqualTo(price1.add(price2).add(price3));
-
+        BigDecimal expected = price1.add(price2).add(price3);
+        assertThat(lowestPriceBrand.getTotalPrice()).isEqualTo(expected);
     }
-
 }
