@@ -4,7 +4,6 @@ import com.musinsa.coordination.brand.controller.request.BrandCreateRequest;
 import com.musinsa.coordination.brand.controller.request.BrandUpdateRequest;
 import com.musinsa.coordination.brand.controller.response.BrandResponse;
 import com.musinsa.coordination.brand.controller.response.BrandResponses;
-import com.musinsa.coordination.brand.controller.response.BrandProductsResponse;
 import com.musinsa.coordination.brand.controller.response.LowestPriceBrandResponse;
 import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.brand.domain.LowestPriceBrand;

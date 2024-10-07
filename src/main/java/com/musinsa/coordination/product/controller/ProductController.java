@@ -2,7 +2,7 @@ package com.musinsa.coordination.product.controller;
 
 import com.musinsa.coordination.product.controller.request.ProductCreateRequest;
 import com.musinsa.coordination.product.controller.request.ProductUpdateRequest;
-import com.musinsa.coordination.product.controller.response.LowestPriceProductResponse;
+import com.musinsa.coordination.product.controller.response.LowestPriceProductsResponse;
 import com.musinsa.coordination.product.controller.response.ProductResponse;
 import com.musinsa.coordination.product.domain.LowestPriceProducts;
 import com.musinsa.coordination.product.domain.Product;
@@ -40,8 +40,8 @@ public class ProductController {
     }
 
     @GetMapping("/lowest-prices")
-    public ResponseEntity<LowestPriceProductResponse> findLowestPrices() {
+    public ResponseEntity<LowestPriceProductsResponse> findLowestPrices() {
         LowestPriceProducts products = productService.getLowestPriceProductsByCategory();
-        return ResponseEntity.ok(LowestPriceProductResponse.from(products));
+        return ResponseEntity.ok(LowestPriceProductsResponse.from(products));
     }
 }
