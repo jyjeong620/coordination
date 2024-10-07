@@ -5,9 +5,7 @@ import com.musinsa.coordination.brand.repository.BrandRepository;
 import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.category.repository.CategoryRepository;
 import com.musinsa.coordination.common.exception.InvalidRequestValueException;
-import com.musinsa.coordination.product.domain.LowestPriceProducts;
-import com.musinsa.coordination.product.domain.LowestPriceProductsFactory;
-import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.domain.*;
 import com.musinsa.coordination.product.exception.NotFoundProductException;
 import com.musinsa.coordination.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,9 +64,19 @@ public class ProductService {
                 .orElseThrow(() -> new InvalidRequestValueException("잘못된 카테고리 Id 입니다. categoryId : " + categoryId));
     }
 
+    @Transactional(readOnly = true)
     public LowestPriceProducts getLowestPriceProductsByCategory() {
         List<Product> products = productRepository.findAll();
 
         return LowestPriceProductsFactory.create(products);
+    }
+
+    @Transactional(readOnly = true)
+    public LowestAndHighestPriceProducts getLowestAndHighestPriceProductsBy(Long categoryId) {
+        Category category = getCategory(categoryId);
+        List<Product> products = productRepository.findAllByCategory(category);
+
+        return LowestAndHighestPriceProductsFactory.create(category, products);
+
     }
 }

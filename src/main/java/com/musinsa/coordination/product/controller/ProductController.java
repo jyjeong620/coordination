@@ -2,8 +2,10 @@ package com.musinsa.coordination.product.controller;
 
 import com.musinsa.coordination.product.controller.request.ProductCreateRequest;
 import com.musinsa.coordination.product.controller.request.ProductUpdateRequest;
+import com.musinsa.coordination.product.controller.response.LowestAndHighestPriceProductsResponse;
 import com.musinsa.coordination.product.controller.response.LowestPriceProductsResponse;
 import com.musinsa.coordination.product.controller.response.ProductResponse;
+import com.musinsa.coordination.product.domain.LowestAndHighestPriceProducts;
 import com.musinsa.coordination.product.domain.LowestPriceProducts;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.service.ProductService;
@@ -43,5 +45,11 @@ public class ProductController {
     public ResponseEntity<LowestPriceProductsResponse> findLowestPrices() {
         LowestPriceProducts products = productService.getLowestPriceProductsByCategory();
         return ResponseEntity.ok(LowestPriceProductsResponse.from(products));
+    }
+
+    @GetMapping("/lowest-highest-prices/{categoryId}")
+    public ResponseEntity<LowestAndHighestPriceProductsResponse> findLowestHighestPrices(@PathVariable Long categoryId) {
+        LowestAndHighestPriceProducts products = productService.getLowestAndHighestPriceProductsBy(categoryId);
+        return ResponseEntity.ok(LowestAndHighestPriceProductsResponse.from(products));
     }
 }
