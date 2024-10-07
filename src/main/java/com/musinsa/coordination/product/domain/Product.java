@@ -66,6 +66,10 @@ public class Product {
         return category.getName();
     }
 
+    public Long getCategoryId() {
+        return category.getId();
+    }
+
     public String getBrandName() {
         return brand.getName();
     }

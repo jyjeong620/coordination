@@ -1,12 +1,16 @@
 package com.musinsa.coordination.brand.service;
 
 import com.musinsa.coordination.brand.domain.Brand;
+import com.musinsa.coordination.brand.domain.LowestPriceBrand;
+import com.musinsa.coordination.brand.domain.LowestPriceBrandFactory;
 import com.musinsa.coordination.brand.exception.DuplicateBrandNameException;
 import com.musinsa.coordination.brand.exception.NotFoundBrandException;
 import com.musinsa.coordination.brand.repository.BrandRepository;
-import jakarta.transaction.Transactional;
+import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +19,7 @@ import java.util.List;
 public class BrandService {
 
     private final BrandRepository brandRepository;
+    private final ProductRepository productRepository;
 
     public List<Brand> findAll() {
         return brandRepository.findAll();
@@ -55,5 +60,12 @@ public class BrandService {
         if (brandRepository.existsByName(name)) {
             throw new DuplicateBrandNameException(name);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public LowestPriceBrand getLowestPriceBrand() {
+        List<Product> products = productRepository.findAllLowestPriceProducts();
+
+        return LowestPriceBrandFactory.create(products);
     }
 }

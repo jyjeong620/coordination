@@ -4,7 +4,10 @@ import com.musinsa.coordination.brand.controller.request.BrandCreateRequest;
 import com.musinsa.coordination.brand.controller.request.BrandUpdateRequest;
 import com.musinsa.coordination.brand.controller.response.BrandResponse;
 import com.musinsa.coordination.brand.controller.response.BrandResponses;
+import com.musinsa.coordination.brand.controller.response.BrandProductsResponse;
+import com.musinsa.coordination.brand.controller.response.LowestPriceBrandResponse;
 import com.musinsa.coordination.brand.domain.Brand;
+import com.musinsa.coordination.brand.domain.LowestPriceBrand;
 import com.musinsa.coordination.brand.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +47,11 @@ public class BrandController {
     public ResponseEntity<BrandResponse> delete(@PathVariable(name = "id") Long brandId) {
         Brand deletedBrand = brandService.delete(brandId);
         return ResponseEntity.ok(BrandResponse.from(deletedBrand));
+    }
+
+    @GetMapping("/lowest-price")
+    public ResponseEntity<LowestPriceBrandResponse> findLowestPriceBrand() {
+        LowestPriceBrand lowestPriceBrand = brandService.getLowestPriceBrand();
+        return ResponseEntity.ok(LowestPriceBrandResponse.from(lowestPriceBrand));
     }
 }
