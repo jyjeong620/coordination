@@ -1,6 +1,7 @@
 package com.musinsa.coordination.product.domain;
 
 import com.musinsa.coordination.category.domain.Category;
+import com.musinsa.coordination.product.exception.NotFoundProductException;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -39,7 +40,7 @@ public class LowestPriceProductsFactory {
     private static Product getLowestPriceProduct(List<Product> products) {
         return products.stream()
                 .min(Comparator.comparing(Product::getPrice).thenComparing(Product::getId, Comparator.reverseOrder()))
-                .orElseThrow(() -> new IllegalArgumentException("최저가 상품을 찾을 수 없습니다"));
+                .orElseThrow(NotFoundProductException::new);
     }
 
 

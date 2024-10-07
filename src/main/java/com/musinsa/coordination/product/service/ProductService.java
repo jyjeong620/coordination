@@ -1,8 +1,10 @@
 package com.musinsa.coordination.product.service;
 
 import com.musinsa.coordination.brand.domain.Brand;
+import com.musinsa.coordination.brand.exception.NotFoundBrandException;
 import com.musinsa.coordination.brand.repository.BrandRepository;
 import com.musinsa.coordination.category.domain.Category;
+import com.musinsa.coordination.category.exception.NotFoundCategoryException;
 import com.musinsa.coordination.category.repository.CategoryRepository;
 import com.musinsa.coordination.common.exception.InvalidRequestValueException;
 import com.musinsa.coordination.product.domain.*;
@@ -56,12 +58,12 @@ public class ProductService {
 
     private Brand getBrand(Long brandId) {
         return brandRepository.findById(brandId)
-                .orElseThrow(() -> new InvalidRequestValueException("잘못된 브랜드 Id 입니다. brandId : " + brandId));
+                .orElseThrow(() -> new NotFoundBrandException(brandId));
     }
 
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new InvalidRequestValueException("잘못된 카테고리 Id 입니다. categoryId : " + categoryId));
+                .orElseThrow(() -> new NotFoundCategoryException(categoryId));
     }
 
     @Transactional(readOnly = true)

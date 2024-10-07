@@ -1,6 +1,7 @@
 package com.musinsa.coordination.brand.domain;
 
 import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.exception.NotFoundProductException;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -19,7 +20,7 @@ public class LowestPriceBrandFactory {
         return productsByBrand.entrySet().stream()
                 .map(LowestPriceBrandFactory::createLowestPriceBrand)
                 .min(Comparator.comparing(LowestPriceBrand::getTotalPrice))
-                .orElseThrow(() -> new IllegalStateException("최저가 브랜드를 찾을 수 없습니다")); // TODO 예외 처리 추가
+                .orElseThrow(NotFoundProductException::new);
     }
 
     private static LowestPriceBrand createLowestPriceBrand(Map.Entry<Brand, List<Product>> entry) {
