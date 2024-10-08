@@ -1,0 +1,41 @@
+package com.musinsa.coordination.product.presentation;
+
+import com.musinsa.coordination.product.presentation.request.ProductCreateRequest;
+import com.musinsa.coordination.product.presentation.request.ProductUpdateRequest;
+import com.musinsa.coordination.product.presentation.response.ProductResponse;
+import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.application.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RequiredArgsConstructor
+@RequestMapping("/api/products")
+@RestController
+public class ProductController {
+
+    private final ProductService productService;
+
+    @PostMapping
+    public ResponseEntity<ProductResponse> save(@RequestBody ProductCreateRequest request) {
+        Product product = productService.save(request.categoryId(), request.brandId(), request.price());
+        return ResponseEntity.ok(ProductResponse.from(product));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> update(
+            @PathVariable Long id,
+            @RequestBody ProductUpdateRequest request
+    ) {
+        Product product = productService.update(id, request.categoryId(), request.brandId(), request.price());
+        return ResponseEntity.ok(ProductResponse.from(product));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+}
