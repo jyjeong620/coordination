@@ -4,10 +4,10 @@ import com.musinsa.coordination.brand.domain.Brand;
 
 import java.util.List;
 
-public record BrandResponses(List<BrandResponse> brands) {
+public record BrandsResponse(List<BrandResponse> brands) {
 
-    public static BrandResponses from(List<Brand> brands) {
-        return new BrandResponses(brands.stream()
+    public static BrandsResponse from(List<Brand> brands) {
+        return new BrandsResponse(brands.stream()
                 .map(BrandResponse::from)
                 .toList());
     }

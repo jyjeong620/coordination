@@ -3,7 +3,7 @@ package com.musinsa.coordination.brand.presentation;
 import com.musinsa.coordination.brand.presentation.request.BrandCreateRequest;
 import com.musinsa.coordination.brand.presentation.request.BrandUpdateRequest;
 import com.musinsa.coordination.brand.presentation.response.BrandResponse;
-import com.musinsa.coordination.brand.presentation.response.BrandResponses;
+import com.musinsa.coordination.brand.presentation.response.BrandsResponse;
 import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.brand.application.BrandService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,9 @@ public class BrandController {
     private final BrandService brandService;
 
     @GetMapping
-    public ResponseEntity<BrandResponses> findAll() {
+    public ResponseEntity<BrandsResponse> findAll() {
         List<Brand> brands = brandService.findAll();
-        return ResponseEntity.ok(BrandResponses.from(brands));
+        return ResponseEntity.ok(BrandsResponse.from(brands));
     }
 
     @PostMapping
