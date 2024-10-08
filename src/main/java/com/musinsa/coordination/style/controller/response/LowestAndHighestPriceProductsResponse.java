@@ -1,8 +1,8 @@
-package com.musinsa.coordination.product.controller.response;
+package com.musinsa.coordination.style.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.musinsa.coordination.common.util.StringConverter;
-import com.musinsa.coordination.product.domain.LowestAndHighestPriceProducts;
+import com.musinsa.coordination.style.domain.LowestAndHighestPriceProducts;
 import com.musinsa.coordination.product.domain.Product;
 
 public record LowestAndHighestPriceProductsResponse(

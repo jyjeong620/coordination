@@ -1,6 +1,7 @@
-package com.musinsa.coordination.product.domain;
+package com.musinsa.coordination.style.domain;
 
 import com.musinsa.coordination.category.domain.Category;
+import com.musinsa.coordination.product.domain.Product;
 import lombok.Getter;
 
 @Getter

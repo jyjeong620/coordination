@@ -1,7 +1,8 @@
-package com.musinsa.coordination.product.domain;
+package com.musinsa.coordination.style.domain;
 
 import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.category.domain.Category;
+import com.musinsa.coordination.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

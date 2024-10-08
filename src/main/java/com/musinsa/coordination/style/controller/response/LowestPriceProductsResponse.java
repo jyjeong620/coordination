@@ -1,6 +1,6 @@
-package com.musinsa.coordination.product.controller.response;
+package com.musinsa.coordination.style.controller.response;
 
-import com.musinsa.coordination.product.domain.LowestPriceProducts;
+import com.musinsa.coordination.style.domain.LowestPriceProducts;
 import com.musinsa.coordination.product.domain.Product;
 
 import java.math.BigDecimal;

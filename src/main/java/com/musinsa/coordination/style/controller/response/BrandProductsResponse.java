@@ -1,9 +1,9 @@
-package com.musinsa.coordination.brand.controller.response;
+package com.musinsa.coordination.style.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.musinsa.coordination.brand.domain.LowestPriceBrand;
 import com.musinsa.coordination.common.util.StringConverter;
 import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.style.domain.LowestPriceBrand;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -25,4 +25,15 @@ public record BrandProductsResponse(
 
         return new BrandProductsResponse(brandName, productResponses, StringConverter.convert(totalPrice));
     }
+
+    record ProductResponse(
+            @JsonProperty("카테고리") String category,
+            @JsonProperty("가격") String price
+    ) {
+
+        public static ProductResponse from(Product product) {
+            return new ProductResponse(product.getCategoryName(), StringConverter.convert(product.getPrice()));
+        }
+    }
+
 }

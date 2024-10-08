@@ -1,5 +1,6 @@
-package com.musinsa.coordination.brand.domain;
+package com.musinsa.coordination.style.domain;
 
+import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.exception.NotFoundProductException;
 
