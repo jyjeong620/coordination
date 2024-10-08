@@ -1,6 +1,7 @@
 package com.musinsa.coordination.brand.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLRestriction;
 
