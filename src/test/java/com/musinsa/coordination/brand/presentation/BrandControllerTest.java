@@ -1,16 +1,17 @@
 package com.musinsa.coordination.brand.presentation;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.musinsa.coordination.brand.domain.Brand;
-import com.musinsa.coordination.brand.domain.BrandRepository;
+import com.musinsa.coordination.brand.infrastructure.BrandJpaRepository;
 import com.musinsa.coordination.brand.presentation.request.BrandCreateRequest;
 import com.musinsa.coordination.brand.presentation.request.BrandUpdateRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,10 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class BrandControllerTest {
 
     @Autowired
@@ -30,7 +33,12 @@ class BrandControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private BrandRepository brandRepository;
+    private BrandJpaRepository brandRepository;
+
+    @BeforeEach
+    void setUp() {
+        brandRepository.deleteAll();
+    }
 
     @DisplayName("브랜드 생성")
     @Test
