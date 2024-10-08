@@ -69,3 +69,22 @@ public record CategoryResponse(Long id, String name) {}
 - 테스트는 각 도메인별 기능이 정상적으로 동작하는지 확인하는 단위테스트와 비즈니스 로직을 만족하는지 확인하는 통합테스트를 작성하였습니다.
 - 통합테스트에서는 FakeRepository를 이용하여 DB에 의존하지 않고 테스트를 진행하였습니다.
 - StyleService의 경우 대부분 비즈니스로직이 Factory에서 처리하기때문에 별도로 테스트를 작성하지 않았습니다.
+
+## 코드 빌드, 테스트, 실행 방법
+### 빌드 및 테스트
+```shell
+./gradlew clean build
+```
+### 테스트
+```shell
+./gradlew test
+```
+### 실행
+```shell
+./gradlew bootRun
+```
+### 각 API는 http 하위 폴더에있는 http파일을 통해 호출 가능합니다.
+
+[브랜드 조회, 추가, 수정, 삭제 API](./http/brand.http)   
+[상품 조회, 추가, 수정, 삭제 API](./http/product.http)   
+[코디 추천 API](./http/style.http)
