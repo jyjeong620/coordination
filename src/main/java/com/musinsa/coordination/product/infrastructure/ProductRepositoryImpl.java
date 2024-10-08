@@ -5,6 +5,7 @@ import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.domain.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         return productJpaRepository.findById(productId);
     }
 
+    @Cacheable(value = "lowestPriceProducts")
     @Override
     public List<Product> findAllLowestPriceProducts() {
         return productJpaRepository.findAllLowestPriceProducts();
