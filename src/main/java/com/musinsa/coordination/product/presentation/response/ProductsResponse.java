@@ -7,8 +7,9 @@ import java.util.List;
 public record ProductsResponse(List<ProductResponse> products) {
 
     public static ProductsResponse from(List<Product> products) {
-        return new ProductsResponse(products.stream()
-                .map(ProductResponse::from)
-                .toList());
+        List<ProductResponse> responses = products.stream()
+            .map(ProductResponse::from)
+            .toList();
+        return new ProductsResponse(responses);
     }
 }
