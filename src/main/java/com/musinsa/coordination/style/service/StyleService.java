@@ -23,7 +23,7 @@ public class StyleService {
 
     @Transactional(readOnly = true)
     public Products getLowestPriceProductsByCategory() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllLowestPriceProducts();
 
         return LowestPriceProductsFactory.create(products);
     }
