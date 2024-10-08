@@ -25,6 +25,10 @@ public class ProductService {
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
 
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
     @Transactional
     public Product save(Long categoryId, Long brandId, BigDecimal price) {
         Category category = getCategory(categoryId);

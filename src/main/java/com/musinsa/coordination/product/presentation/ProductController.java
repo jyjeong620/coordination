@@ -5,9 +5,12 @@ import com.musinsa.coordination.product.presentation.request.ProductUpdateReques
 import com.musinsa.coordination.product.presentation.response.ProductResponse;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.application.ProductService;
+import com.musinsa.coordination.product.presentation.response.ProductsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
@@ -15,6 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
+
+    @GetMapping
+    public ResponseEntity<ProductsResponse> findAll() {
+        List<Product> products = productService.findAll();
+        return ResponseEntity.ok(ProductsResponse.from(products));
+    }
 
     @PostMapping
     public ResponseEntity<ProductResponse> save(@RequestBody ProductCreateRequest request) {

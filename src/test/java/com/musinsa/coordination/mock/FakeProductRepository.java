@@ -16,6 +16,11 @@ public class FakeProductRepository implements ProductRepository {
     private final List<Product> productList = new ArrayList<>();
 
     @Override
+    public List<Product> findAll() {
+        return productList;
+    }
+
+    @Override
     public Product save(Product product) {
         ReflectionTestUtils.setField(product, "id", idGenerator.incrementAndGet());
         productList.add(product);
