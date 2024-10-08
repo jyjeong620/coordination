@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class ProductsTest {
@@ -23,7 +24,7 @@ class ProductsTest {
         List<Product> productList = List.of(product1, product2);
 
         // when
-        Products products = Products.of(productList);
+        Products products = Products.from(productList);
 
         // then
         assertSoftly(softly -> {
@@ -44,16 +45,12 @@ class ProductsTest {
         Product product1 = Product.create(category, brand, price1);
         Product product2 = Product.create(category, brand, price2);
         List<Product> products = List.of(product1, product2);
-        Products productsList = Products.of(products);
+        Products productsList = Products.from(products);
 
         // when
         BigDecimal totalPrice = productsList.getTotalPrice();
 
         // then
-        BigDecimal expectedPrice = price1.add(price2);
-        assertSoftly(softly -> {
-            softly.assertThat(totalPrice).isEqualTo(expectedPrice);
-        });
+        assertThat(totalPrice).isEqualTo(BigDecimal.valueOf(30000));
     }
-
 }
