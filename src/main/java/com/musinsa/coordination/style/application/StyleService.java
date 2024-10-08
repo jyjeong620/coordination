@@ -1,13 +1,16 @@
 package com.musinsa.coordination.style.application;
 
 import com.musinsa.coordination.category.domain.Category;
+import com.musinsa.coordination.category.domain.CategoryRepository;
 import com.musinsa.coordination.category.exception.NotFoundCategoryException;
-import com.musinsa.coordination.category.infrastructure.CategoryRepository;
 import com.musinsa.coordination.product.domain.BrandProducts;
 import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.domain.ProductRepository;
 import com.musinsa.coordination.product.domain.Products;
-import com.musinsa.coordination.product.infrastructure.ProductRepository;
-import com.musinsa.coordination.style.domain.*;
+import com.musinsa.coordination.style.domain.LowestAndHighestPriceProducts;
+import com.musinsa.coordination.style.domain.LowestAndHighestPriceProductsFactory;
+import com.musinsa.coordination.style.domain.LowestPriceBrandFactory;
+import com.musinsa.coordination.style.domain.LowestPriceProductsFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

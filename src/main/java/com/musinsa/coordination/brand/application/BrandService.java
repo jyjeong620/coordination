@@ -1,10 +1,9 @@
 package com.musinsa.coordination.brand.application;
 
 import com.musinsa.coordination.brand.domain.Brand;
+import com.musinsa.coordination.brand.domain.BrandRepository;
 import com.musinsa.coordination.brand.exception.DuplicateBrandNameException;
 import com.musinsa.coordination.brand.exception.NotFoundBrandException;
-import com.musinsa.coordination.brand.infrastructure.BrandRepository;
-import com.musinsa.coordination.product.infrastructure.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,6 @@ import java.util.List;
 public class BrandService {
 
     private final BrandRepository brandRepository;
-    private final ProductRepository productRepository;
 
     public List<Brand> findAll() {
         return brandRepository.findAll();
