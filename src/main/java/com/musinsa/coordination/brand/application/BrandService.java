@@ -32,7 +32,7 @@ public class BrandService {
     public Brand update(Long brandId, String updatedName) {
         validateBrandName(updatedName);
 
-        Brand brand = findById(brandId);
+        Brand brand = getBrand(brandId);
         brand.updateName(updatedName);
 
         return brand;
@@ -40,13 +40,13 @@ public class BrandService {
 
     @Transactional
     public Brand delete(Long brandId) {
-        Brand brand = findById(brandId);
+        Brand brand = getBrand(brandId);
 
         brand.disable();
         return brand;
     }
 
-    private Brand findById(Long brandId) {
+    private Brand getBrand(Long brandId) {
         return brandRepository.findById(brandId)
                 .orElseThrow(() -> new NotFoundBrandException(brandId));
     }
@@ -56,5 +56,4 @@ public class BrandService {
             throw new DuplicateBrandNameException(name);
         }
     }
-
 }
