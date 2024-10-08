@@ -1,5 +1,6 @@
 package com.musinsa.coordination.product.repository;
 
+import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.product.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p JOIN FETCH p.category JOIN FETCH p.brand WHERE p.category = :category")
     List<Product> findAllByCategory(Category category);
+
+    List<Product> findAllByCategoryAndBrand(Category category, Brand brand);
 }

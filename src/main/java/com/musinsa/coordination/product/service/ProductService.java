@@ -7,6 +7,7 @@ import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.category.exception.NotFoundCategoryException;
 import com.musinsa.coordination.category.repository.CategoryRepository;
 import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.exception.NotEnoughStockException;
 import com.musinsa.coordination.product.exception.NotFoundProductException;
 import com.musinsa.coordination.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -46,7 +48,16 @@ public class ProductService {
     public void delete(Long productId) {
         Product product = getProduct(productId);
 
+        validateEnoughStock(product);
+
         product.disable();
+    }
+
+    private void validateEnoughStock(Product product) {
+        List<Product> products = productRepository.findAllByCategoryAndBrand(product.getCategory(), product.getBrand());
+        if (products.size() == 1) {
+            throw new NotEnoughStockException(product.getId());
+        }
     }
 
     private Product getProduct(Long productId) {
