@@ -49,12 +49,13 @@ public class ProductService {
     }
 
     @Transactional
-    public void delete(Long productId) {
+    public Product delete(Long productId) {
         Product product = getProduct(productId);
 
         validateEnoughStock(product);
 
         product.disable();
+        return product;
     }
 
     private void validateEnoughStock(Product product) {
