@@ -21,7 +21,7 @@ public class StyleController {
 
     private final StyleService styleService;
 
-    @GetMapping("/categories/lowest-price-products")
+    @GetMapping("/categories/lowest-priced-products")
     public ResponseEntity<LowestPriceProductsResponse> findLowestPrices() {
         Products lowestPriceProducts = styleService.getLowestPriceProductsByCategory();
         return ResponseEntity.ok(LowestPriceProductsResponse.from(lowestPriceProducts));
