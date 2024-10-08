@@ -1,0 +1,26 @@
+
+### 상품 목록 조회
+GET http://localhost:8080/api/products
+
+### 상품 추가
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "categoryId" : 1,
+  "brandId" : 1,
+  "price" : 100
+}
+
+### 상품 수정
+PUT http://localhost:8080/api/products/73
+Content-Type: application/json
+
+{
+  "categoryId" : 1,
+  "brandId" : 1,
+  "price" : 10000
+}
+
+### 상품 삭제
+DELETE http://localhost:8080/api/products/73
