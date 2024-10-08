@@ -6,7 +6,6 @@ import com.musinsa.coordination.product.domain.Products;
 import com.musinsa.coordination.product.exception.NotFoundProductException;
 import lombok.Getter;
 
-import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class LowestPriceProductsFactory {
 
     public static Products create(List<Product> products) {
         Map<Category, List<Product>> productsByCategory = groupProductsByCategory(products);
-        List<Product> lowestPriceProducts = findLowestPriceProducts(productsByCategory);
+        List<Product> lowestPriceProducts = getLowestPriceProducts(productsByCategory);
 
         return Products.of(lowestPriceProducts);
     }
@@ -30,7 +29,7 @@ public class LowestPriceProductsFactory {
                 .collect(Collectors.groupingBy(Product::getCategory));
     }
 
-    private static List<Product> findLowestPriceProducts(Map<Category, List<Product>> groupByCategory) {
+    private static List<Product> getLowestPriceProducts(Map<Category, List<Product>> groupByCategory) {
         return groupByCategory.values()
                 .stream()
                 .map(LowestPriceProductsFactory::getLowestPriceProduct)
