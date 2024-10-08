@@ -21,7 +21,7 @@ public class LowestPriceProductsFactory {
         Map<Category, List<Product>> productsByCategory = groupProductsByCategory(products);
         List<Product> lowestPriceProducts = getLowestPriceProducts(productsByCategory);
 
-        return Products.of(lowestPriceProducts);
+        return Products.from(lowestPriceProducts);
     }
 
     private static Map<Category, List<Product>> groupProductsByCategory(List<Product> products) {

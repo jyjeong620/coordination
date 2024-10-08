@@ -15,7 +15,7 @@ public class Products {
         this.products = products;
     }
 
-    public static Products of(List<Product> products) {
+    public static Products from(List<Product> products) {
         BigDecimal totalPrice = calculateTotalPrice(products);
         return new Products(totalPrice, products);
     }
