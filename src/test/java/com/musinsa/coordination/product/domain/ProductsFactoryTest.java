@@ -1,8 +1,8 @@
-package com.musinsa.coordination.style.domain;
+package com.musinsa.coordination.product.domain;
 
 import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.category.domain.Category;
-import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.style.domain.LowestPriceProductsFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-class LowestPriceProductsFactoryTest {
+class ProductsFactoryTest {
 
     @DisplayName("Product 리스트를 받아 카테고리별 가격이 가장 낮은 상품들을 생성한다.")
     @Test
@@ -29,7 +29,7 @@ class LowestPriceProductsFactoryTest {
         Product highestPriceProduct = Product.create(category, highestPriceBrand, BigDecimal.valueOf(300));
 
         // when
-        LowestPriceProducts lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct, middlePriceProduct, highestPriceProduct));
+        Products lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct, middlePriceProduct, highestPriceProduct));
 
         // then
         assertSoftly(softly -> {
@@ -57,7 +57,7 @@ class LowestPriceProductsFactoryTest {
         Product highestPriceProduct2 = Product.create(category2, highestPriceBrand, BigDecimal.valueOf(300));
 
         // when
-        LowestPriceProducts lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct1, middlePriceProduct1, highestPriceProduct1, lowestPriceProduct2, middlePriceProduct2, highestPriceProduct2));
+        Products lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct1, middlePriceProduct1, highestPriceProduct1, lowestPriceProduct2, middlePriceProduct2, highestPriceProduct2));
 
         // then
         assertSoftly(softly -> {
@@ -88,7 +88,7 @@ class LowestPriceProductsFactoryTest {
         Product highestPriceProduct2 = Product.create(category2, highestPriceBrand, BigDecimal.valueOf(3000));
 
         // when
-        LowestPriceProducts lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct1, middlePriceProduct1, highestPriceProduct1, lowestPriceProduct2, middlePriceProduct2, highestPriceProduct2));
+        Products lowestPriceProducts = LowestPriceProductsFactory.create(List.of(lowestPriceProduct1, middlePriceProduct1, highestPriceProduct1, lowestPriceProduct2, middlePriceProduct2, highestPriceProduct2));
 
         // then
         BigDecimal expected = minPrice1.add(minPrice2);

@@ -3,6 +3,7 @@ package com.musinsa.coordination.style.domain;
 
 import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.category.domain.Category;
+import com.musinsa.coordination.product.domain.BrandProducts;
 import com.musinsa.coordination.product.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class LowestPriceBrandFactoryTest {
         Product product6 = Product.create(category2, highestBrand, BigDecimal.valueOf(200));
 
         // when
-        LowestPriceBrand lowestPriceBrand = LowestPriceBrandFactory.create(List.of(product1, product2, product3, product4, product5, product6));
+        BrandProducts lowestPriceBrand = LowestPriceBrandFactory.create(List.of(product1, product2, product3, product4, product5, product6));
 
         // then
         assertSoftly(softly -> {
@@ -61,7 +62,7 @@ class LowestPriceBrandFactoryTest {
         Product product3 = Product.create(category3, lowestBrand, price3);
 
         // when
-        LowestPriceBrand lowestPriceBrand = LowestPriceBrandFactory.create(List.of(product1, product2, product3));
+        BrandProducts lowestPriceBrand = LowestPriceBrandFactory.create(List.of(product1, product2, product3));
 
         // then
         BigDecimal expected = price1.add(price2).add(price3);

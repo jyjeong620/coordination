@@ -4,8 +4,8 @@ import com.musinsa.coordination.style.controller.response.LowestAndHighestPriceP
 import com.musinsa.coordination.style.controller.response.LowestPriceBrandResponse;
 import com.musinsa.coordination.style.controller.response.LowestPriceProductsResponse;
 import com.musinsa.coordination.style.domain.LowestAndHighestPriceProducts;
-import com.musinsa.coordination.style.domain.LowestPriceBrand;
-import com.musinsa.coordination.style.domain.LowestPriceProducts;
+import com.musinsa.coordination.product.domain.BrandProducts;
+import com.musinsa.coordination.product.domain.Products;
 import com.musinsa.coordination.style.service.StyleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +21,15 @@ public class StyleController {
 
     private final StyleService styleService;
 
-    @GetMapping("/categories/lowest-prices")
+    @GetMapping("/categories/lowest-price-products")
     public ResponseEntity<LowestPriceProductsResponse> findLowestPrices() {
-        LowestPriceProducts products = styleService.getLowestPriceProductsByCategory();
-        return ResponseEntity.ok(LowestPriceProductsResponse.from(products));
+        Products lowestPriceProducts = styleService.getLowestPriceProductsByCategory();
+        return ResponseEntity.ok(LowestPriceProductsResponse.from(lowestPriceProducts));
     }
 
-    @GetMapping("/brands/lowest-price")
+    @GetMapping("/lowest-priced-brands")
     public ResponseEntity<LowestPriceBrandResponse> findLowestPriceBrand() {
-        LowestPriceBrand lowestPriceBrand = styleService.getLowestPriceBrand();
+        BrandProducts lowestPriceBrand = styleService.getLowestPriceBrand();
         return ResponseEntity.ok(LowestPriceBrandResponse.from(lowestPriceBrand));
     }
 

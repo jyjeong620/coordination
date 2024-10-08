@@ -3,7 +3,9 @@ package com.musinsa.coordination.style.service;
 import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.category.exception.NotFoundCategoryException;
 import com.musinsa.coordination.category.repository.CategoryRepository;
+import com.musinsa.coordination.product.domain.BrandProducts;
 import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.domain.Products;
 import com.musinsa.coordination.product.repository.ProductRepository;
 import com.musinsa.coordination.style.domain.*;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +22,14 @@ public class StyleService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public LowestPriceProducts getLowestPriceProductsByCategory() {
+    public Products getLowestPriceProductsByCategory() {
         List<Product> products = productRepository.findAll();
 
         return LowestPriceProductsFactory.create(products);
     }
 
     @Transactional(readOnly = true)
-    public LowestPriceBrand getLowestPriceBrand() {
+    public BrandProducts getLowestPriceBrand() {
         List<Product> products = productRepository.findAllLowestPriceProducts();
 
         return LowestPriceBrandFactory.create(products);

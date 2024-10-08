@@ -2,6 +2,7 @@ package com.musinsa.coordination.style.domain;
 
 import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.product.domain.Product;
+import com.musinsa.coordination.product.domain.Products;
 import com.musinsa.coordination.product.exception.NotFoundProductException;
 import lombok.Getter;
 
@@ -17,13 +18,11 @@ public class LowestPriceProductsFactory {
     private LowestPriceProductsFactory() {
     }
 
-    public static LowestPriceProducts create(List<Product> products) {
+    public static Products create(List<Product> products) {
         Map<Category, List<Product>> productsByCategory = groupProductsByCategory(products);
         List<Product> lowestPriceProducts = findLowestPriceProducts(productsByCategory);
 
-        BigDecimal totalPrice = calculateTotalPrice(lowestPriceProducts);
-
-        return new LowestPriceProducts(totalPrice, lowestPriceProducts);
+        return Products.of(lowestPriceProducts);
     }
 
     private static Map<Category, List<Product>> groupProductsByCategory(List<Product> products) {
@@ -43,12 +42,4 @@ public class LowestPriceProductsFactory {
                 .min(Comparator.comparing(Product::getPrice).thenComparing(Product::getId, Comparator.reverseOrder()))
                 .orElseThrow(NotFoundProductException::new);
     }
-
-
-    private static BigDecimal calculateTotalPrice(List<Product> products) {
-        return products.stream()
-                .map(Product::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
 }

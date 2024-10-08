@@ -3,7 +3,7 @@ package com.musinsa.coordination.style.controller.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.musinsa.coordination.common.util.StringConverter;
 import com.musinsa.coordination.product.domain.Product;
-import com.musinsa.coordination.style.domain.LowestPriceBrand;
+import com.musinsa.coordination.product.domain.BrandProducts;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -14,7 +14,7 @@ public record BrandProductsResponse(
         @JsonProperty("카테고리") List<ProductResponse> products,
         @JsonProperty("총액") String totalPrice) {
 
-    public static BrandProductsResponse from(LowestPriceBrand lowestPriceBrand) {
+    public static BrandProductsResponse from(BrandProducts lowestPriceBrand) {
         String brandName = lowestPriceBrand.getBrandName();
         List<ProductResponse> productResponses = lowestPriceBrand.getProducts()
                 .stream()
