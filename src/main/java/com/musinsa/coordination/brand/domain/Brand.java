@@ -1,7 +1,7 @@
 package com.musinsa.coordination.brand.domain;
 
+import com.musinsa.coordination.common.exception.InvalidRequestValueException;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -23,6 +23,7 @@ public class Brand {
     }
 
     private Brand(String name, boolean isEnable) {
+        validate(name);
         this.name = name;
         this.isEnable = isEnable;
     }
@@ -37,5 +38,11 @@ public class Brand {
 
     public void disable() {
         this.isEnable = false;
+    }
+
+    private void validate(String name) {
+        if(name == null || name.isBlank()) {
+            throw new InvalidRequestValueException("브랜드 이름은 필수입니다.");
+        }
     }
 }
