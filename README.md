@@ -37,10 +37,10 @@ coordination
 └── style         -> 상품정보를 이용한 코디 추천 관련 패키지
 ```
 각각의 하위 페이지에는 아래와 같은 구조로 구성되어있습니다..
-- controller : API 요청을 처리하는 컨트롤러
+- presentation : API 요청을 처리하는 컨트롤러
 - domain : 도메인 객체를 정의하는 패키지, 비즈니스 로직을 처리하는 객체를 가짐
-- repository: 데이터 베이스등 데이터 저장소에 접근 담당 
-- service : domain 객체를 이용해 비즈니스 로직을 처리하는 서비스 객체
+- infrastructure: 데이터 베이스등 데이터 저장소에 접근 담당 
+- application : domain 객체를 이용해 비즈니스 로직을 처리하는 서비스 객체
 
 ## 구현 내용 설명
 ### 데이터 조회 방식
