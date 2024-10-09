@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ### 브랜드 수정
-PUT http://localhost:8080/api/brands/11
+PUT http://localhost:8080/api/brands/10
 Content-Type: application/json
 
 {
@@ -19,4 +19,4 @@ Content-Type: application/json
 }
 
 ### 브랜드 삭제
-DELETE http://localhost:8080/api/brands/11
+DELETE http://localhost:8080/api/brands/10
