@@ -1,6 +1,7 @@
 package com.musinsa.coordination.brand.application;
 
 import com.musinsa.coordination.brand.domain.Brand;
+import com.musinsa.coordination.brand.exception.DuplicateBrandNameException;
 import com.musinsa.coordination.mock.FakeBrandRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,20 @@ class BrandServiceTest {
         assertSoftly(softly -> {
             softly.assertThat(savedBrand).isNotNull();
             softly.assertThat(savedBrand.getName()).isEqualTo(name);
+        });
+    }
+
+    @DisplayName("브랜드를 등록시 중복된 이름이 있으면 예외가 발생한다.")
+    @Test
+    void save_fail() {
+        // given
+        String name = "나이키";
+        brandService.save(name);
+
+        // when & then
+        assertSoftly(softly -> {
+            softly.assertThatThrownBy(() -> brandService.save(name))
+                    .isInstanceOf(DuplicateBrandNameException.class);
         });
     }
 

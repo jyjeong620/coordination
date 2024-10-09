@@ -16,29 +16,6 @@ public class FakeBrandRepository implements BrandRepository {
     private final Map<Long, Brand> brandMap = new HashMap<>();
 
     public FakeBrandRepository() {
-        Brand A = Brand.create("A");
-        Brand B = Brand.create("B");
-        Brand C = Brand.create("C");
-        Brand D = Brand.create("D");
-        Brand E = Brand.create("E");
-        Brand F = Brand.create("F");
-        Brand G = Brand.create("G");
-
-        ReflectionTestUtils.setField(A, "id", idGenerator.incrementAndGet());
-        ReflectionTestUtils.setField(B, "id", idGenerator.incrementAndGet());
-        ReflectionTestUtils.setField(C, "id", idGenerator.incrementAndGet());
-        ReflectionTestUtils.setField(D, "id", idGenerator.incrementAndGet());
-        ReflectionTestUtils.setField(E, "id", idGenerator.incrementAndGet());
-        ReflectionTestUtils.setField(F, "id", idGenerator.incrementAndGet());
-        ReflectionTestUtils.setField(G, "id", idGenerator.incrementAndGet());
-
-        brandMap.put(A.getId(), A);
-        brandMap.put(B.getId(), B);
-        brandMap.put(C.getId(), C);
-        brandMap.put(D.getId(), D);
-        brandMap.put(E.getId(), E);
-        brandMap.put(F.getId(), F);
-        brandMap.put(G.getId(), G);
     }
 
     @Override
