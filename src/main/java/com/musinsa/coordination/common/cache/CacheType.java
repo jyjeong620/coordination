@@ -6,7 +6,7 @@ import java.time.Duration;
 
 @Getter
 public enum CacheType {
-    LOWEST_PRICE_PRODUCTS("lowestPriceProducts", Duration.ofMinutes(1L)),
+    LOWEST_PRICE_PRODUCTS("lowestPriceProducts", Duration.ofSeconds(1L)),
     ;
 
     private final String cacheName;

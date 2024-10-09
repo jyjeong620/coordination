@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 
+@Profile("!test")
 @EnableCaching
 @Configuration
 public class CacheConfig {

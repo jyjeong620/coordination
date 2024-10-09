@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -34,8 +33,6 @@ class StyleControllerTest {
     @Autowired
     private DatabaseCleanup databaseCleanup;
     @Autowired
-    private CacheManager cacheManager;
-    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ProductJpaRepository productRepository;
@@ -47,7 +44,6 @@ class StyleControllerTest {
     @BeforeEach
     void setUp() {
         databaseCleanup.execute();
-        cacheManager.getCache("lowestPriceProducts").clear();
     }
 
     @DisplayName("카테고리 별로 최저가격인 브랜드와 가격과 총액을 조회한다.")
@@ -59,12 +55,18 @@ class StyleControllerTest {
         Category category1 = categoryRepository.save(Category.create("상의"));
         Category category2 = categoryRepository.save(Category.create("하의"));
         Category category3 = categoryRepository.save(Category.create("신발"));
-        Product 카테고리1의_최소가격상품 = saveProductWithBrandIdAndCategoryId(brand1.getId(), category1.getId(), 10000);
-        Product 카테고리2의_최소가격상품 = saveProductWithBrandIdAndCategoryId(brand1.getId(), category2.getId(), 10000);
-        Product 카테고리3의_최소가격상품 = saveProductWithBrandIdAndCategoryId(brand1.getId(), category3.getId(), 10000);
-        Product 카테고리1의_최대가격상품 = saveProductWithBrandIdAndCategoryId(brand2.getId(), category1.getId(), 30000);
-        Product 카테고리2의_최대가격상품 = saveProductWithBrandIdAndCategoryId(brand2.getId(), category2.getId(), 30000);
-        Product 카테고리3의_최대가격상품 = saveProductWithBrandIdAndCategoryId(brand2.getId(), category3.getId(), 30000);
+        Product 카테고리1의_최소가격상품 = saveProductWithBrandIdAndCategoryId(brand1.getId(),
+            category1.getId(), 10000);
+        Product 카테고리2의_최소가격상품 = saveProductWithBrandIdAndCategoryId(brand1.getId(),
+            category2.getId(), 10000);
+        Product 카테고리3의_최소가격상품 = saveProductWithBrandIdAndCategoryId(brand1.getId(),
+            category3.getId(), 10000);
+        Product 카테고리1의_최대가격상품 = saveProductWithBrandIdAndCategoryId(brand2.getId(),
+            category1.getId(), 30000);
+        Product 카테고리2의_최대가격상품 = saveProductWithBrandIdAndCategoryId(brand2.getId(),
+            category2.getId(), 30000);
+        Product 카테고리3의_최대가격상품 = saveProductWithBrandIdAndCategoryId(brand2.getId(),
+            category3.getId(), 30000);
 
         // when & then
         mockMvc.perform(get("/api/styles/categories/lowest-priced-products")
@@ -72,11 +74,14 @@ class StyleControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.totalPrice").value(30000))
             .andExpect(jsonPath("$.products[0].price").value(10000))
-            .andExpect(jsonPath("$.products[0].category").value(카테고리1의_최소가격상품.getCategory().getName()))
+            .andExpect(
+                jsonPath("$.products[0].category").value(카테고리1의_최소가격상품.getCategory().getName()))
             .andExpect(jsonPath("$.products[1].price").value(10000))
-            .andExpect(jsonPath("$.products[1].category").value(카테고리2의_최소가격상품.getCategory().getName()))
+            .andExpect(
+                jsonPath("$.products[1].category").value(카테고리2의_최소가격상품.getCategory().getName()))
             .andExpect(jsonPath("$.products[2].price").value(10000))
-            .andExpect(jsonPath("$.products[2].category").value(카테고리3의_최소가격상품.getCategory().getName()));
+            .andExpect(
+                jsonPath("$.products[2].category").value(카테고리3의_최소가격상품.getCategory().getName()));
     }
 
     @DisplayName("단일 브랜드로 전체 카테고리 상품을 구매할 경우 최저가격인 브랜드와 총액을 조회한다.")
@@ -90,12 +95,18 @@ class StyleControllerTest {
         Brand brand1 = brandRepository.save(Brand.create("A"));
         Brand brand2 = brandRepository.save(Brand.create("B"));
 
-        Product 브랜드1_최저가격상품1 = saveProductWithBrandIdAndCategoryId(brand1.getId(), category1.getId(), 10000);
-        Product 브랜드1_최저가격상품2 = saveProductWithBrandIdAndCategoryId(brand1.getId(), category2.getId(), 10000);
-        Product 브랜드1_최저가격상품3 = saveProductWithBrandIdAndCategoryId(brand1.getId(), category3.getId(), 10000);
-        Product 브랜드2_최대가격상품1 = saveProductWithBrandIdAndCategoryId(brand2.getId(), category1.getId(), 30000);
-        Product 브랜드2_최대가격상품2 = saveProductWithBrandIdAndCategoryId(brand2.getId(), category2.getId(), 30000);
-        Product 브랜드2_최대가격상품3 = saveProductWithBrandIdAndCategoryId(brand2.getId(), category3.getId(), 30000);
+        Product 브랜드1_최저가격상품1 = saveProductWithBrandIdAndCategoryId(brand1.getId(),
+            category1.getId(), 10000);
+        Product 브랜드1_최저가격상품2 = saveProductWithBrandIdAndCategoryId(brand1.getId(),
+            category2.getId(), 10000);
+        Product 브랜드1_최저가격상품3 = saveProductWithBrandIdAndCategoryId(brand1.getId(),
+            category3.getId(), 10000);
+        Product 브랜드2_최대가격상품1 = saveProductWithBrandIdAndCategoryId(brand2.getId(),
+            category1.getId(), 30000);
+        Product 브랜드2_최대가격상품2 = saveProductWithBrandIdAndCategoryId(brand2.getId(),
+            category2.getId(), 30000);
+        Product 브랜드2_최대가격상품3 = saveProductWithBrandIdAndCategoryId(brand2.getId(),
+            category3.getId(), 30000);
 
         // when & then
         mockMvc.perform(get("/api/styles/lowest-priced-brands")
@@ -111,8 +122,10 @@ class StyleControllerTest {
         // given
         Category category = categoryRepository.save(Category.create("상의"));
         Brand brand = brandRepository.save(Brand.create("A"));
-        Product 카테고리1_최저가격상품 = saveProductWithBrandIdAndCategoryId(category.getId(), brand.getId(), 10000);
-        Product 카테고리1_최고가격상품 = saveProductWithBrandIdAndCategoryId(category.getId(), brand.getId(), 30000);
+        Product 카테고리1_최저가격상품 = saveProductWithBrandIdAndCategoryId(category.getId(), brand.getId(),
+            10000);
+        Product 카테고리1_최고가격상품 = saveProductWithBrandIdAndCategoryId(category.getId(), brand.getId(),
+            30000);
 
         // when & then
         mockMvc.perform(get("/api/styles/categories/{categoryId}/lowest-highest-prices", 1)
