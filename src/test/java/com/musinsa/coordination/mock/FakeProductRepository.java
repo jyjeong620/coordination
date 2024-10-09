@@ -1,7 +1,6 @@
 package com.musinsa.coordination.mock;
 
 import com.musinsa.coordination.brand.domain.Brand;
-import com.musinsa.coordination.brand.domain.BrandRepository;
 import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.domain.ProductRepository;
@@ -36,8 +35,36 @@ public class FakeProductRepository implements ProductRepository {
 
     @Override
     public List<Product> findAllLowestPriceProducts() {
+        Map<String, List<Product>> groupedProducts = groupByCategoryIdAndBrandId();
 
-        return List.of();
+        List<Product> result = new ArrayList<>();
+
+        // 중복된 카테고리와 브랜드가 있는 경우
+        groupedProducts.values()
+            .forEach(productList -> {
+            if (productList.size() > 1) {
+                // 중복된 경우, 가격이 가장 낮은 상품을 찾아 추가합니다.
+                productList.stream()
+                    .min(Comparator.comparing(Product::getPrice)).ifPresent(result::add);
+            } else {
+                // 중복이 없을 경우, 해당 상품을 추가합니다.
+                result.add(productList.getFirst());
+            }
+        });
+
+        return result;
+
+    }
+
+    private Map<String, List<Product>> groupByCategoryIdAndBrandId() {
+        Map<String, List<Product>> groupedProducts = new HashMap<>();
+
+        // 카테고리와 브랜드를 기준으로 그룹화합니다.
+        for (Product product : productList) {
+            String key = product.getCategory().getId() + "-" + product.getBrand().getId();
+            groupedProducts.computeIfAbsent(key, k -> new ArrayList<>()).add(product);
+        }
+        return groupedProducts;
     }
 
     @Override
