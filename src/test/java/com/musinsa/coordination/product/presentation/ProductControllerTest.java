@@ -11,31 +11,30 @@ import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.brand.infrastructure.BrandJpaRepository;
 import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.category.infrastructure.CategoryJpaRepository;
+import com.musinsa.coordination.config.DatabaseCleanup;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.infrastructure.ProductJpaRepository;
 import com.musinsa.coordination.product.presentation.request.ProductCreateRequest;
 import com.musinsa.coordination.product.presentation.request.ProductUpdateRequest;
-import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-@Sql(scripts = {"classpath:insert_category.sql", "classpath:insert_brand.sql"})
+@ComponentScan(basePackages = "com.musinsa.coordination.config")
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class ProductControllerTest {
-
+    @Autowired
+    private DatabaseCleanup databaseCleanup;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -49,14 +48,16 @@ class ProductControllerTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.deleteAll();
+        databaseCleanup.execute();
     }
 
     @DisplayName("상품 생성")
     @Test
     void save() throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest(1L, 1L, BigDecimal.valueOf(10000));
+        Brand brand = brandRepository.save(Brand.create("A"));
+        Category category = categoryRepository.save(Category.create("상의"));
+        ProductCreateRequest request = new ProductCreateRequest(category.getId(), brand.getId(), BigDecimal.valueOf(10000));
         String jsonContent = objectMapper.writeValueAsString(request);
 
         // when & then
@@ -71,8 +72,8 @@ class ProductControllerTest {
     void save_fail_1() throws Exception {
         // given
         Long notExistCategoryId = 100L;
-        ProductCreateRequest request = new ProductCreateRequest(notExistCategoryId, 1L,
-            BigDecimal.valueOf(10000));
+        Brand brand = brandRepository.save(Brand.create("A"));
+        ProductCreateRequest request = new ProductCreateRequest(notExistCategoryId, brand.getId(), BigDecimal.valueOf(10000));
         String jsonContent = objectMapper.writeValueAsString(request);
 
         // when & then
@@ -87,8 +88,8 @@ class ProductControllerTest {
     void save_fail_2() throws Exception {
         // given
         Long notExistBrandId = 100L;
-        ProductCreateRequest request = new ProductCreateRequest(1L, notExistBrandId,
-            BigDecimal.valueOf(10000));
+        Category category = categoryRepository.save(Category.create("상의"));
+        ProductCreateRequest request = new ProductCreateRequest(category.getId(), notExistBrandId, BigDecimal.valueOf(10000));
         String jsonContent = objectMapper.writeValueAsString(request);
 
         // when & then
@@ -102,7 +103,9 @@ class ProductControllerTest {
     @Test
     void save_fail_3() throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest(1L, 1L, BigDecimal.ZERO);
+        Brand brand = brandRepository.save(Brand.create("A"));
+        Category category = categoryRepository.save(Category.create("상의"));
+        ProductCreateRequest request = new ProductCreateRequest(category.getId(), brand.getId(), BigDecimal.ZERO);
         String jsonContent = objectMapper.writeValueAsString(request);
 
         // when & then
@@ -116,8 +119,11 @@ class ProductControllerTest {
     @Test
     void update() throws Exception {
         // given
-        Product product = saveProduct();
-        ProductUpdateRequest request = new ProductUpdateRequest(1L, 1L, BigDecimal.valueOf(99999));
+        Brand brand = brandRepository.save(Brand.create("A"));
+        Category category = categoryRepository.save(Category.create("상의"));
+        Product product = saveProduct(category.getId(), brand.getId(), 10000);
+
+        ProductUpdateRequest request = new ProductUpdateRequest(brand.getId(), category.getId(), BigDecimal.valueOf(99999));
         String jsonContent = objectMapper.writeValueAsString(request);
 
         // when & then
@@ -132,8 +138,10 @@ class ProductControllerTest {
     @Test
     void update_fail_1() throws Exception {
         // given
+        Brand brand = brandRepository.save(Brand.create("A"));
+        Category category = categoryRepository.save(Category.create("상의"));
         long notExistProductId = 1000L;
-        ProductUpdateRequest request = new ProductUpdateRequest(1L, 1L, BigDecimal.valueOf(99999));
+        ProductUpdateRequest request = new ProductUpdateRequest(category.getId(), brand.getId(), BigDecimal.valueOf(99999));
         String jsonContent = objectMapper.writeValueAsString(request);
 
         // when & then
@@ -148,8 +156,10 @@ class ProductControllerTest {
     @Test
     void productDelete() throws Exception {
         // given
-        Product product1 = saveProduct();
-        Product product2 = saveProduct();
+        Brand brand = brandRepository.save(Brand.create("A"));
+        Category category = categoryRepository.save(Category.create("상의"));
+        Product product1 = saveProduct(category.getId(), brand.getId(), 10000);
+        Product product2 = saveProduct(category.getId(), brand.getId(), 10000);
 
         // when & then
         mockMvc.perform(delete("/api/products/" + product2.getId()))
@@ -172,7 +182,9 @@ class ProductControllerTest {
     @Test
     void productDelete_fail_2() throws Exception {
         // given
-        Product product = saveProduct();
+        Brand brand = brandRepository.save(Brand.create("A"));
+        Category category = categoryRepository.save(Category.create("상의"));
+        Product product = saveProduct(category.getId(), brand.getId(), 10000);
 
         // when & then
         mockMvc.perform(delete("/api/products/" + product.getId()))
@@ -180,12 +192,13 @@ class ProductControllerTest {
             .andExpect(jsonPath("$.message").value("해당 브랜드의 상품이 하나뿐이므로 삭제할 수 없습니다"));
     }
 
-    Product saveProduct() {
-        Brand saveBrand = brandRepository.findById(1L)
+    Product saveProduct(long categoryId, long brandId, int price) {
+        Brand saveBrand = brandRepository.findById(brandId)
             .orElseThrow(() -> new IllegalArgumentException("브랜드가 존재하지 않습니다."));
-        Category category = categoryRepository.findById(1L)
+        Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다."));
-        return productRepository.save(Product.create(category, saveBrand, BigDecimal.valueOf(10000)));
+        return productRepository.save(
+            Product.create(category, saveBrand, BigDecimal.valueOf(price)));
     }
 
 }

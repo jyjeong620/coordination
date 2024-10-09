@@ -1,46 +1,50 @@
 package com.musinsa.coordination.product.application;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import com.musinsa.coordination.brand.domain.Brand;
+import com.musinsa.coordination.category.domain.Category;
 import com.musinsa.coordination.mock.FakeBrandRepository;
 import com.musinsa.coordination.mock.FakeCategoryRepository;
 import com.musinsa.coordination.mock.FakeProductRepository;
 import com.musinsa.coordination.product.domain.Product;
 import com.musinsa.coordination.product.exception.NotEnoughStockException;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 class ProductServiceTest {
 
     private ProductService productService;
+    private FakeProductRepository productRepository;
+    private FakeCategoryRepository categoryRepository;
+    private FakeBrandRepository brandRepository;
 
     @BeforeEach
     void setUp() {
-        FakeCategoryRepository fakeCategoryRepository = new FakeCategoryRepository();
-        FakeBrandRepository fakeBrandRepository = new FakeBrandRepository();
-        FakeProductRepository fakeProductRepository = new FakeProductRepository();
-        productService = new ProductService(fakeProductRepository, fakeBrandRepository, fakeCategoryRepository);
+        categoryRepository = new FakeCategoryRepository();
+        productRepository = new FakeProductRepository();
+        brandRepository = new FakeBrandRepository();
+        productService = new ProductService(productRepository, brandRepository, categoryRepository);
     }
 
     @DisplayName("상품을 등록할 수 있다.")
     @Test
     void save() {
         // given
-        Long categoryId = 1L;
-        Long brandId = 1L;
+        Category category = categoryRepository.save(Category.create("상의"));
+        Brand brand = brandRepository.save(Brand.create("나이키"));
         BigDecimal price = BigDecimal.valueOf(100);
 
         // when
-        Product product = productService.save(categoryId, brandId, price);
+        Product product = productService.save(category.getId(), brand.getId(), price);
 
         // then
         assertSoftly(softly -> {
             softly.assertThat(product).isNotNull();
-            softly.assertThat(product.getCategoryId()).isEqualTo(categoryId);
-            softly.assertThat(product.getBrand().getId()).isEqualTo(brandId);
+            softly.assertThat(product.getCategoryId()).isEqualTo(category.getId());
+            softly.assertThat(product.getBrand().getId()).isEqualTo(brand.getId());
             softly.assertThat(product.getPrice()).isEqualTo(price);
             softly.assertThat(product.isEnable()).isTrue();
         });
@@ -50,19 +54,22 @@ class ProductServiceTest {
     @Test
     void update() {
         // given
-        Product product = saveProduct(1L, 1L, BigDecimal.valueOf(100));
-        Long updatedCategoryId = 2L;
-        Long updatedBrandId = 2L;
+        Category category = categoryRepository.save(Category.create("상의"));
+        Brand brand = brandRepository.save(Brand.create("나이키"));
+        Product product = saveProduct(category.getId(), brand.getId(), BigDecimal.valueOf(100));
+
+        Category updatedCategory = categoryRepository.save(Category.create("하의"));
+        Brand updatedBrand = brandRepository.save(Brand.create("아디다스"));
         BigDecimal updatedPrice = BigDecimal.valueOf(1000);
 
         // when
-        Product updatedProduct = productService.update(product.getId(), updatedCategoryId, updatedBrandId, updatedPrice);
+        Product updatedProduct = productService.update(product.getId(), updatedCategory.getId(), updatedBrand.getId(), updatedPrice);
 
         // then
         assertSoftly(softly -> {
             softly.assertThat(updatedProduct).isNotNull();
-            softly.assertThat(updatedProduct.getCategoryId()).isEqualTo(updatedCategoryId);
-            softly.assertThat(updatedProduct.getBrand().getId()).isEqualTo(updatedBrandId);
+            softly.assertThat(updatedProduct.getCategoryId()).isEqualTo(updatedCategory.getId());
+            softly.assertThat(updatedProduct.getBrand().getId()).isEqualTo(updatedBrand.getId());
             softly.assertThat(updatedProduct.getPrice()).isEqualTo(updatedPrice);
             softly.assertThat(updatedProduct.isEnable()).isTrue();
         });
@@ -72,8 +79,10 @@ class ProductServiceTest {
     @Test
     void delete() {
         // given
-        Product product1 = saveProduct(1L, 1L, BigDecimal.valueOf(100));
-        Product product2 = saveProduct(1L, 1L, BigDecimal.valueOf(100));
+        Category category = categoryRepository.save(Category.create("상의"));
+        Brand brand = brandRepository.save(Brand.create("나이키"));
+        Product product1 = saveProduct(category.getId(), brand.getId(), BigDecimal.valueOf(100));
+        Product product2 = saveProduct(category.getId(), brand.getId(), BigDecimal.valueOf(100));
 
         // when
         productService.delete(product2.getId());
@@ -90,7 +99,9 @@ class ProductServiceTest {
     @Test
     void deleteException() {
         // given
-        Product product = saveProduct(1L, 1L, BigDecimal.valueOf(100));
+        Category category = categoryRepository.save(Category.create("상의"));
+        Brand brand = brandRepository.save(Brand.create("나이키"));
+        Product product = saveProduct(category.getId(), brand.getId(), BigDecimal.valueOf(100));
 
         // when & then
         assertSoftly(softly -> {

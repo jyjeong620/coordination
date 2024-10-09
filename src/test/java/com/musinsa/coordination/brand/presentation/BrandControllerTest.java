@@ -11,6 +11,7 @@ import com.musinsa.coordination.brand.domain.Brand;
 import com.musinsa.coordination.brand.infrastructure.BrandJpaRepository;
 import com.musinsa.coordination.brand.presentation.request.BrandCreateRequest;
 import com.musinsa.coordination.brand.presentation.request.BrandUpdateRequest;
+import com.musinsa.coordination.config.DatabaseCleanup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,15 +20,19 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+@ComponentScan(basePackages = "com.musinsa.coordination.config")
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class BrandControllerTest {
 
+    @Autowired
+    private DatabaseCleanup databaseCleanup;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -37,7 +42,7 @@ class BrandControllerTest {
 
     @BeforeEach
     void setUp() {
-        brandRepository.deleteAll();
+        databaseCleanup.execute();
     }
 
     @DisplayName("브랜드 생성")
