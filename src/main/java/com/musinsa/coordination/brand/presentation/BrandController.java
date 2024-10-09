@@ -31,17 +31,17 @@ public class BrandController {
         return ResponseEntity.ok(BrandResponse.from(brand));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{brandId}")
     public ResponseEntity<BrandResponse> update(
-            @PathVariable(name = "id") Long brandId,
+            @PathVariable Long brandId,
             @RequestBody BrandUpdateRequest request
     ) {
         Brand updatedBrand = brandService.update(brandId, request.updatedName());
         return ResponseEntity.ok(BrandResponse.from(updatedBrand));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<BrandResponse> delete(@PathVariable(name = "id") Long brandId) {
+    @DeleteMapping("/{brandId}")
+    public ResponseEntity<BrandResponse> delete(@PathVariable Long brandId) {
         Brand deletedBrand = brandService.delete(brandId);
         return ResponseEntity.ok(BrandResponse.from(deletedBrand));
     }

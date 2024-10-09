@@ -31,18 +31,18 @@ public class ProductController {
         return ResponseEntity.ok(ProductResponse.from(product));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     public ResponseEntity<ProductResponse> update(
-            @PathVariable Long id,
+            @PathVariable Long productId,
             @RequestBody ProductUpdateRequest request
     ) {
-        Product product = productService.update(id, request.categoryId(), request.brandId(), request.price());
+        Product product = productService.update(productId, request.categoryId(), request.brandId(), request.price());
         return ResponseEntity.ok(ProductResponse.from(product));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ProductResponse> delete(@PathVariable Long id) {
-        Product product = productService.delete(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ProductResponse> delete(@PathVariable Long productId) {
+        Product product = productService.delete(productId);
         return ResponseEntity.ok(ProductResponse.from(product));
     }
 }

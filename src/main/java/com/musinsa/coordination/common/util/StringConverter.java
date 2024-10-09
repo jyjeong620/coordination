@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class StringConverter {
+
     private static final NumberFormat PRICE_FORMAT = NumberFormat.getInstance(Locale.US);
 
     private StringConverter() {

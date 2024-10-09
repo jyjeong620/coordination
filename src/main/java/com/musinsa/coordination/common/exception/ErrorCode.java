@@ -12,7 +12,6 @@ public enum ErrorCode {
 
     // 409,
     DUPLICATE_RESOURCE(409001, "이미 존재하는 데이터입니다"),
-
     ;
 
     private final int code;

@@ -1,13 +1,13 @@
 package com.musinsa.coordination.product.domain;
 
 import com.musinsa.coordination.brand.domain.Brand;
-import lombok.Getter;
-
 import java.math.BigDecimal;
 import java.util.List;
+import lombok.Getter;
 
 @Getter
 public class BrandProducts {
+
     private final Brand brand;
     private final List<Product> products;
     private final BigDecimal totalPrice;
@@ -25,8 +25,8 @@ public class BrandProducts {
 
     private static BigDecimal calculateTotalPrice(List<Product> products) {
         return products.stream()
-                .map(Product::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(Product::getPrice)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public String getBrandName() {
