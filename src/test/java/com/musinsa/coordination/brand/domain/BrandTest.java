@@ -1,9 +1,13 @@
 package com.musinsa.coordination.brand.domain;
 
+import com.musinsa.coordination.common.exception.InvalidRequestValueException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class BrandTest {
 
@@ -20,6 +24,16 @@ class BrandTest {
         assertThat(brand).isNotNull();
         assertThat(brand.getName()).isEqualTo(name);
         assertThat(brand.isEnable()).isTrue();
+    }
+
+    @DisplayName("브랜드 명이 null이거나 빈 문자열일 경우 에러를 발생시킨다.")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void create_InvalidName(String name) {
+        // when & then
+        assertThatThrownBy(() -> Brand.create(name))
+                .isInstanceOf(InvalidRequestValueException.class)
+                .hasMessage("브랜드 이름은 필수입니다.");
     }
 
     @DisplayName("브랜드 명을 수정할 수 있다.")
