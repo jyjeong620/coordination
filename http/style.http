@@ -1,0 +1,10 @@
+
+### 카테고리 별로 최저가격인 브랜드와 가격, 총액 조회
+GET http://localhost:8080/api/styles/categories/lowest-priced-products
+
+### 단일 브랜드로 전체 카테고리 상품을 구매할 경우 최저가격인 브랜드와 총액 조회
+GET http://localhost:8080/api/styles/lowest-priced-brands
+
+### 특정 카테고리에서 최저가격 브랜드와 최고가격 브랜드를 확인하고 각 브랜드 상품의 가격 조회
+@categoryId = 2
+GET http://localhost:8080/api/styles/categories/{{categoryId}}/lowest-highest-prices
