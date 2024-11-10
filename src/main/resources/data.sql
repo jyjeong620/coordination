@@ -7,3 +7,14 @@ VALUES ('상의', true),
        ('모자', true),
        ('양말', true),
        ('액세서리', true);
+
+INSERT INTO brand (name, is_enable)
+VALUES ('A', true),
+       ('B', true),
+       ('C', true),
+       ('D', true),
+       ('E', true),
+       ('F', true),
+       ('G', true),
+       ('H', true),
+       ('I', true);
