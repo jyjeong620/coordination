@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .product-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .product-details {
+            font-weight: bold;
+        }
+
+        .edit-fields {
+            display: none;
+            margin-top: 5px;
+        }
+
+        .edit-btn, .save-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background-color: #FF9800;
+        }
+
+        .edit-btn:hover, .save-btn:hover {
+            background-color: #45a049;
+        }
+
+        .input-container {
+            margin-top: 10px;
+        }
+
+        .home-btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .home-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>상품 목록</h1>
+
+<!-- 홈 화면으로 돌아가기 버튼 -->
+<button class="home-btn" onclick="goToHome()">홈으로 돌아가기</button>
+
+<!-- 상품 목록을 표시할 영역 -->
+<ul id="product-list">
+</ul>
+
+<!-- 상품 추가 폼 -->
+<h2>상품 추가</h2>
+<form id="add-product-form">
+    <select id="category-id" required>
+        <option value="">카테고리 선택</option>
+    </select>
+    <select id="brand-id" required>
+        <option value="">브랜드 선택</option>
+    </select>
+    <input type="number" id="price" placeholder="가격" required />
+    <button type="submit">추가</button>
+</form>
+
+<script>
+    // 카테고리와 브랜드 목록을 저장할 변수
+    let categories = [];
+    let brands = [];
+
+    // 페이지 로드 시 상품 목록을 가져오고, 카테고리 및 브랜드 목록을 한 번만 요청
+    $(document).ready(function() {
+        fetchCategoriesAndBrands(); // 카테고리와 브랜드 목록 가져오기
+        loadProducts(); // 상품 목록 가져오기
+
+        // 상품 추가 기능
+        $('#add-product-form').submit(function(event) {
+            event.preventDefault();
+            const categoryId = $('#category-id').val();
+            const brandId = $('#brand-id').val();
+            const price = $('#price').val().trim();
+            if (categoryId && brandId && price) {
+                addProduct(categoryId, brandId, parseFloat(price));
+            }
+        });
+    });
+
+    // 카테고리와 브랜드 목록을 한 번만 가져오는 함수
+    function fetchCategoriesAndBrands() {
+        // 카테고리 목록 가져오기
+        $.getJSON('http://localhost:8080/api/categories', function(data) {
+            categories = data.categories;
+            const categoryDropdown = $('#category-id');
+            categories.forEach(function(category) {
+                categoryDropdown.append(`<option value="${category.id}">${category.name}</option>`);
+            });
+        });
+
+        // 브랜드 목록 가져오기
+        $.getJSON('http://localhost:8080/api/brands', function(data) {
+            brands = data.brands;
+            const brandDropdown = $('#brand-id');
+            brands.forEach(function(brand) {
+                brandDropdown.append(`<option value="${brand.id}">${brand.name}</option>`);
+            });
+        });
+    }
+
+    // GET 요청으로 상품 목록 조회
+    function loadProducts() {
+        $.ajax({
+            url: 'http://localhost:8080/api/products',
+            method: 'GET',
+            success: function(response) {
+                $('#product-list').empty();
+                response.products.forEach(function(product) {
+                    $('#product-list').append(`
+                        <li id="product-${product.id}" class="product-item">
+                            <span id="product-details-${product.id}" class="product-details">
+                                카테고리: ${product.category}, 브랜드: ${product.brand}, 가격: ${product.price}
+                            </span>
+                            <button class="edit-btn" data-id="${product.id}" onclick="editProduct(${product.id})">수정</button>
+                            <button onclick="deleteProduct(${product.id})">삭제</button>
+                            <button id="save-btn-${product.id}" class="save-btn" style="display: none;" onclick="saveProduct(${product.id})">완료</button>
+                            <div class="input-container edit-fields" id="edit-fields-${product.id}">
+                                <select id="edit-category-id-${product.id}" required></select>
+                                <select id="edit-brand-id-${product.id}" required></select>
+                                <input type="number" id="edit-price-${product.id}" placeholder="가격" value="${product.price}" />
+                            </div>
+                        </li>
+                    `);
+                    fetchCategoriesAndBrandsForEdit(product.id, product.categoryId, product.brandId);
+                });
+            },
+            error: function() {
+                alert('상품 목록을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    // 수정 폼에 카테고리와 브랜드 목록 추가
+    function fetchCategoriesAndBrandsForEdit(id, selectedCategoryId, selectedBrandId) {
+        const categoryDropdown = $(`#edit-category-id-${id}`);
+        categories.forEach(function(category) {
+            const selected = category.id == selectedCategoryId ? 'selected' : '';
+            categoryDropdown.append(`<option value="${category.id}" ${selected}>${category.name}</option>`);
+        });
+
+        const brandDropdown = $(`#edit-brand-id-${id}`);
+        brands.forEach(function(brand) {
+            const selected = brand.id == selectedBrandId ? 'selected' : '';
+            brandDropdown.append(`<option value="${brand.id}" ${selected}>${brand.name}</option>`);
+        });
+    }
+
+    // POST 요청으로 상품 추가
+    function addProduct(categoryId, brandId, price) {
+        $.ajax({
+            url: 'http://localhost:8080/api/products',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ categoryId: categoryId, brandId: brandId, price: price }),
+            success: function() {
+                $('#category-id').val('');
+                $('#brand-id').val('');
+                $('#price').val('');
+                loadProducts();
+            },
+            error: function() {
+                alert('상품 추가에 실패했습니다.');
+            }
+        });
+    }
+
+    // 수정 버튼 클릭 시 처리
+    function editProduct(id) {
+        $(`#product-details-${id}`).hide();
+        $(`#edit-fields-${id}`).show();
+        $(`#save-btn-${id}`).show();
+        $(`.edit-btn[data-id='${id}']`).hide();
+    }
+
+    // 완료 버튼 클릭 시 처리
+    function saveProduct(id) {
+        const categoryId = $(`#edit-category-id-${id}`).val().trim();
+        const brandId = $(`#edit-brand-id-${id}`).val().trim();
+        const price = $(`#edit-price-${id}`).val().trim();
+
+        if (categoryId && brandId && price) {
+            $.ajax({
+                url: `http://localhost:8080/api/products/${id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ categoryId: categoryId, brandId: brandId, price: parseFloat(price) }),
+                success: function() {
+                    loadProducts();
+                },
+                error: function() {
+                    alert('상품 수정에 실패했습니다.');
+                }
+            });
+        }
+    }
+
+    // DELETE 요청으로 상품 삭제
+    function deleteProduct(id) {
+        $.ajax({
+            url: `http://localhost:8080/api/products/${id}`,
+            method: 'DELETE',
+            success: function() {
+                loadProducts();
+            },
+            error: function() {
+                alert('상품 삭제에 실패했습니다.');
+            }
+        });
+    }
+
+    // 홈 화면으로 돌아가는 함수
+    function goToHome() {
+        window.location.href = 'index.html';
+    }
+</script>
+</body>
+</html>
