@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>코디 추천</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .recommendation-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .recommendation-title {
+            font-weight: bold;
+        }
+
+        .product-details {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .product-details span {
+            display: block;
+        }
+
+        .home-btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .home-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .load-btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .load-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        select, button {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>코디 추천</h1>
+
+<button class="home-btn" onclick="goToHome()">홈으로 돌아가기</button>
+
+<div id="category-lowest-price" class="recommendation-item">
+    <h3 class="recommendation-title">카테고리별 최저가격 브랜드와 가격</h3>
+    <button class="load-btn" onclick="loadCategoryLowestPrice()">조회</button>
+</div>
+
+<div id="brand-lowest-price" class="recommendation-item">
+    <h3 class="recommendation-title">단일 브랜드로 전체 카테고리 상품 최저가격 브랜드와 총액</h3>
+    <button class="load-btn" onclick="loadBrandLowestPrice()">조회</button>
+</div>
+
+<div id="category-price-range" class="recommendation-item">
+    <h3 class="recommendation-title">특정 카테고리 최저가격 및 최고가격 브랜드</h3>
+
+    <label for="category-select">카테고리 선택:</label>
+    <select id="category-select">
+    </select>
+
+    <button class="load-btn" onclick="loadCategoryPriceRange()">조회</button>
+</div>
+
+<div id="popup-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="popup-details"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        loadCategories();
+    });
+
+    // 카테고리 목록을 드롭다운에 추가
+    function loadCategories() {
+        $.ajax({
+            url: 'http://localhost:8080/api/categories',
+            method: 'GET',
+            success: function(response) {
+                let categorySelect = $('#category-select');
+                response.categories.forEach(function(category) {
+                    categorySelect.append(new Option(category.name, category.id));
+                });
+            },
+            error: function() {
+                alert('카테고리 목록을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    // 카테고리별 최저가격 브랜드와 가격, 총액 조회
+    function loadCategoryLowestPrice() {
+        $.ajax({
+            url: 'http://localhost:8080/api/styles/categories/lowest-priced-products',
+            method: 'GET',
+            success: function(response) {
+                let details = `<span>총액: ${response.totalPrice} 원</span>`;
+                response.products.forEach(function(product) {
+                    details += `
+                        <div class="product-details">
+                            <span>카테고리: ${product.category}</span>
+                            <span>브랜드: ${product.brand}</span>
+                            <span>가격: ${product.price} 원</span>
+                        </div>
+                    `;
+                });
+                openModal(details);
+            },
+            error: function() {
+                alert('카테고리별 최저가격을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    // 단일 브랜드로 전체 카테고리 상품 최저가격 브랜드와 총액 조회
+    function loadBrandLowestPrice() {
+        $.ajax({
+            url: 'http://localhost:8080/api/styles/lowest-priced-brands',
+            method: 'GET',
+            success: function(response) {
+                let details = `<span>총액: ${response.최저가.총액} 원</span><br>`;
+                details += `<span>브랜드: ${response.최저가.브랜드명}</span><br>`;
+                response.최저가.카테고리.forEach(function(category) {
+                    details += `
+                        <div class="product-details">
+                            <span>카테고리: ${category.카테고리}</span>
+                            <span>가격: ${category.가격} 원</span>
+                        </div>
+                    `;
+                });
+                openModal(details);
+            },
+            error: function() {
+                alert('단일 브랜드 최저가격을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    // 선택된 카테고리의 최저가격 및 최고가격 브랜드 조회
+    function loadCategoryPriceRange() {
+        let categoryId = $('#category-select').val();
+        if (!categoryId) {
+            alert('카테고리를 선택해 주세요.');
+            return;
+        }
+
+        $.ajax({
+            url: `http://localhost:8080/api/styles/categories/${categoryId}/lowest-highest-prices`,
+            method: 'GET',
+            success: function(response) {
+                let details = `
+                    <div class="product-details">
+                        <span>카테고리: ${response.카테고리}</span>
+                        <span>최저가격 브랜드: ${response.최저가.브랜드}</span>
+                        <span>최저가격: ${response.최저가.가격} 원</span>
+                        <span>최고가격 브랜드: ${response.최고가.브랜드}</span>
+                        <span>최고가격: ${response.최고가.가격} 원</span>
+                    </div>
+                `;
+                openModal(details);
+            },
+            error: function() {
+                alert('특정 카테고리 가격 범위를 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    function openModal(content) {
+        document.getElementById('popup-details').innerHTML = content;
+        document.getElementById('popup-modal').style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById('popup-modal').style.display = "none";
+    }
+
+    function goToHome() {
+        window.location.href = 'index.html';
+    }
+</script>
+</body>
+</html>
