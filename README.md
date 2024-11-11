@@ -93,6 +93,8 @@ public record CategoryResponse(Long id, String name) {}
 [상품 조회, 추가, 수정, 삭제 API](./http/product.http)   
 [코디 추천 API](./http/style.http)
 
+### 브랜드 조회, 상품 조회, 코디 추천 화면은 프로젝트 실행 후 http://localhost:8080 페이지에서 확인 가능합니다.
+
 ## 요구사항
 
 - [x] 브랜드를 추가, 수정, 삭제 할 수 있다
