@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class LowestAndHighestPriceProductsFactory {
+
     private LowestAndHighestPriceProductsFactory() {
     }
 

@@ -45,7 +45,7 @@ public class Brand {
     }
 
     private void validate(String name) {
-        if(name == null || name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new InvalidRequestValueException("브랜드 이름은 필수입니다.");
         }
     }

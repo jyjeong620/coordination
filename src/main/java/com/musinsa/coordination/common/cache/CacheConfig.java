@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 @EnableCaching
 @Configuration
 public class CacheConfig {
+
     @Bean
     public CacheManager caffeinCacheManager() {
         List<CaffeineCache> caffeineCaches = Arrays.stream(CacheType.values())

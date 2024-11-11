@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class LowestAndHighestPriceProducts {
+
     private final Category category;
     private final Product lowestPriceProduct;
     private final Product highestPriceProduct;

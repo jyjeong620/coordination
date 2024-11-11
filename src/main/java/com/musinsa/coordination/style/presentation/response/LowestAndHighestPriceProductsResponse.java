@@ -10,6 +10,7 @@ public record LowestAndHighestPriceProductsResponse(
         @JsonProperty("최저가") ProductResponse lowestPriceProduct,
         @JsonProperty("최고가") ProductResponse highestPriceProduct
 ) {
+
     public static LowestAndHighestPriceProductsResponse from(LowestAndHighestPriceProducts products) {
         return new LowestAndHighestPriceProductsResponse(
                 products.getCategoryName(),
@@ -22,6 +23,7 @@ public record LowestAndHighestPriceProductsResponse(
             @JsonProperty("브랜드") String brand,
             @JsonProperty("가격") String price
     ) {
+
         public static ProductResponse from(Product product) {
             return new ProductResponse(product.getBrandName(), StringConverter.convert(product.getPrice()));
         }
