@@ -17,3 +17,7 @@ spring:
   sql:
     init:
       mode: always
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+    enabled: true

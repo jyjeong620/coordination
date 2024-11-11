@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>브랜드 관리</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .brand-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .brand-name {
+            font-weight: bold;
+        }
+
+        .edit-name {
+            width: 200px;
+            padding: 5px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .edit-btn,
+        .save-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background-color: #FF9800; /* "완료" 버튼 색상 */
+        }
+
+        .edit-btn:hover,
+        .save-btn:hover {
+            background-color: #45a049;
+        }
+
+        .input-container {
+            margin-top: 10px;
+        }
+
+        .home-btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .home-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>브랜드 목록</h1>
+
+<button class="home-btn" onclick="goToHome()">홈으로 돌아가기</button>
+
+<ul id="brand-list">
+</ul>
+
+<h2>브랜드 추가</h2>
+<form id="add-brand-form">
+    <input type="text" id="brand-name" placeholder="브랜드명" required />
+    <button type="submit">추가</button>
+</form>
+
+<script>
+    // 페이지 로드 시 브랜드 목록을 가져오기
+    $(document).ready(function() {
+        loadBrands();
+
+        // 브랜드 추가 기능
+        $('#add-brand-form').submit(function(event) {
+            event.preventDefault(); // 기본 폼 제출 방지
+            const brandName = $('#brand-name').val().trim();
+            if (brandName) {
+                addBrand(brandName);
+            }
+        });
+    });
+
+    // GET 요청으로 브랜드 목록 조회
+    function loadBrands() {
+        $.ajax({
+            url: 'http://localhost:8080/api/brands',
+            method: 'GET',
+            success: function(response) {
+                $('#brand-list').empty();
+                response.brands.forEach(function(brand) {
+                    $('#brand-list').append(`
+                            <li id="brand-${brand.id}" class="brand-item">
+                                <span id="brand-name-${brand.id}" class="brand-name">${brand.name}</span>
+                                <button class="edit-btn" data-id="${brand.id}" onclick="editBrand(${brand.id})">수정</button>
+                                <button onclick="deleteBrand(${brand.id})">삭제</button>
+                                <button id="save-btn-${brand.id}" class="save-btn" style="display: none;" onclick="saveBrand(${brand.id})">완료</button>
+                                <div class="input-container">
+                                    <input type="text" id="edit-name-${brand.id}" class="edit-name" value="${brand.name}" />
+                                </div>
+                            </li>
+                        `);
+                });
+            },
+            error: function() {
+                alert('브랜드 목록을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    // POST 요청으로 브랜드 추가
+    function addBrand(brandName) {
+        $.ajax({
+            url: 'http://localhost:8080/api/brands',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ name: brandName }),
+            success: function() {
+                $('#brand-name').val('');
+                loadBrands();
+            },
+            error: function() {
+                alert('브랜드 추가에 실패했습니다.');
+            }
+        });
+    }
+
+    // 수정 버튼 클릭 시 처리
+    function editBrand(brandId) {
+        $("#edit-name-" + brandId).show();
+        $("#save-btn-" + brandId).show();
+        $("#brand-name-" + brandId).hide();
+        $(".edit-btn[data-id='" + brandId + "']").hide();
+        $("#edit-name-" + brandId).focus();
+    }
+
+    // 완료 버튼 클릭 시 처리
+    function saveBrand(brandId) {
+        const updatedName = $('#edit-name-' + brandId).val().trim();
+        if (updatedName) {
+            $.ajax({
+                url: `http://localhost:8080/api/brands/${brandId}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ updatedName: updatedName }),
+                success: function() {
+                    loadBrands(); // 목록 갱신
+                },
+                error: function() {
+                    alert('브랜드 수정에 실패했습니다.');
+                }
+            });
+        }
+    }
+
+    // DELETE 요청으로 브랜드 삭제
+    function deleteBrand(brandId) {
+        $.ajax({
+            url: `http://localhost:8080/api/brands/${brandId}`,
+            method: 'DELETE',
+            success: function() {
+                loadBrands(); // 목록 갱신
+            },
+            error: function() {
+                alert('브랜드 삭제에 실패했습니다.');
+            }
+        });
+    }
+
+    // 홈 화면으로 돌아가는 함수
+    function goToHome() {
+        window.location.href = 'index.html';  // 홈 페이지로 리디렉션
+    }
+</script>
+</body>
+</html>
